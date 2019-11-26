@@ -12,6 +12,7 @@ import {
     Easing
 } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { Button } from 'react-native-material-ui/src';
 
 
 export default class Result extends React.Component {
@@ -43,7 +44,7 @@ export default class Result extends React.Component {
                             <Text style={styles.nofication}>{this.props.nofication}</Text>
                             <View style={{ marginTop: 40 }}>
                                 <Text style={styles.nofication}>{this.props.message}</Text>
-                                <View style={{ backgroundColor: 'blue',width:"100%",height:40 }}>
+                                <View style={{ backgroundColor: 'blue', width: "100%", height: 40 }}>
                                     <TouchableOpacity style={styles.buttonStyle}
                                         onPress={this.props.onPressButton}
                                     >
@@ -54,13 +55,20 @@ export default class Result extends React.Component {
                         </View>
                     </View>
                 ) : (
+                        <View></View>
+                    )
+                }
+                {this.state.isError === "" ? (
+                    <View></View>
+                ) : (
                         <View style={styles.container}>
                             <LottieView style={{ width: "80%", height: 200, alignSelf: 'center', }} source={require('../../assets/Animation/4970-unapproved-cross.json')} progress={this.state.success} />
                             <View style={styles.swagger}>
                                 <Text style={styles.nofication}>{this.state.isError}</Text>
                                 <View style={{ marginTop: 10 }}>
                                     <Text style={styles.nofication}></Text>
-                                    <TouchableOpacity style={styles.buttonStyle}
+                                    <TouchableOpacity style
+                                    ={styles.buttonStyle}
                                         onPress={this.props.onPressWhenHaveError}
                                     >
                                         <Text style={styles.buttonText}>Trở về</Text>
@@ -114,3 +122,4 @@ const styles = StyleSheet.create({
     }
 
 })
+ 

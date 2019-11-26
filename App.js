@@ -26,13 +26,54 @@ import Logo from './src/template/Logo';
 import WaitingScreen from './src/View/waiting_screen/WaitingSrceen'
 import Result from './src/View/result_screen/Result'
 import Form from './src/View/form_screen/forms_srceen'
+import Home from './src/new_ui/home'
+import Fraud from './src/new_ui/fraud'
 import axios from 'axios'
-import { throwStatement } from '@babel/types';
 
 
-//Home
+
+
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
+  render() {
+    return (
+      <Home
+        currentProgress={50}
+        onPress={() => this.props.navigation.navigate('ListToDoScreen')}
+      />
+    )
+  }
+}
+
+class ListToDoScreen extends React.Component {
+  static navigationOptions = {
+    headerStyle: {
+      elevation: 0
+    },
+  };
+
+  onPress = (Screen) => {
+    console.log(Screen)
+    return this.props.navigation.navigate(Screen)
+  }
+
+  render() {
+    return (
+      <Fraud
+        currentStatus={50} // Tiến độ của feature
+        onPress={this.onPress}
+      />
+    )
+  }
+}
+
+
 class DetectIDScreen extends React.Component {
-
+  static navigationOptions = {
+    header: null
+  };
   getBase64ImageData = (data) => {
     if (data) {
       this.sendImageToRepository(data)
@@ -93,7 +134,7 @@ class TemplateResultScreen extends React.Component {
       titleError: '',
       logoError: '',
       centerStarError: '',
-      alertError:''
+      alertError: ''
     }
   }
 
@@ -101,19 +142,19 @@ class TemplateResultScreen extends React.Component {
     this.pictureFormCMND()
   }
 
-  
+
   // Hàm này tìm lỗi 
   templateDataProccesing(templateData, checkData) {
     try {
       for (const element of templateData) {
         if (element.displayName === checkData && element.imageObjectDetection.score >= 0.9)// Điều kiện để kt lỗi
-         {
+        {
           console.log(element.displayName)
           console.log(element.imageObjectDetection.score)
           console.log("test run here")
           return true;
         }
-      } 
+      }
     } catch (error) {
       return false
     }
@@ -123,7 +164,7 @@ class TemplateResultScreen extends React.Component {
   // Code củ chuối sẽ fix lại sau 
   // Hàm nãy sẽ gắn lỗi vào state
   checkTemplateData(templateData) {
-  
+
     if (this.templateDataProccesing(templateData, "CenterStar")) {
       this.setState({
         centerStarError: ""
@@ -135,9 +176,9 @@ class TemplateResultScreen extends React.Component {
       }, () => {
         this.setState({
           alertError: this.state.centerStarError,
-        },()=>{
+        }, () => {
           console.log(this.state.alertError)
-          this.setState({isLoading:false})
+          this.setState({ isLoading: false })
         })
         return
       })
@@ -151,13 +192,13 @@ class TemplateResultScreen extends React.Component {
     else {
       this.setState({
         titleError: "Vui lòng chụp rõ tiêu đề",
-        
+
       }, () => {
         this.setState({
           alertError: this.state.titleError,
-        },()=>{
+        }, () => {
           console.log(this.state.alertError)
-          this.setState({isLoading:false})
+          this.setState({ isLoading: false })
         })
         return
       })
@@ -174,9 +215,9 @@ class TemplateResultScreen extends React.Component {
       }, () => {
         this.setState({
           alertError: this.state.faceError,
-         
-        },()=>{
-          this.setState({isLoading:false})
+
+        }, () => {
+          this.setState({ isLoading: false })
           console.log(this.state.alertError)
         })
         return
@@ -194,9 +235,9 @@ class TemplateResultScreen extends React.Component {
       }, () => {
         this.setState({
           alertError: this.state.logoError,
-         
-        },()=>{
-          this.setState({isLoading:false})
+
+        }, () => {
+          this.setState({ isLoading: false })
           console.log(this.state.alertError)
         })
         return
@@ -210,7 +251,7 @@ class TemplateResultScreen extends React.Component {
   }
 
   templateProcessing() {
-    const base64Image = this.props.navigation.getParam('base64Image').replace("data:image/jpeg;base64,","")
+    const base64Image = this.props.navigation.getParam('base64Image').replace("data:image/jpeg;base64,", "")
     const URLTEMPLATE = "https://automl.googleapis.com/v1beta1/projects/1051788884641/locations/us-central1/models/IOD4203111895592337408:predict"
     axios.post(URLTEMPLATE, {
       "payload": {
@@ -220,7 +261,7 @@ class TemplateResultScreen extends React.Component {
       }
     }, {
       headers: {
-        "Authorization": "Bearer ya29.ImCyB7W6XnIO2VVi6c5a2jCb8NJf7j2C4uIA92jNpJp1RViol-g9DIO8N-fCze82kSt4UYUnTzcPxUPhZX14RbtIh27usfvfK7TOy3WjSjF8UZYkXHSjExRjGijVXovWWz0"
+        "Authorization": "Bearer ya29.Il-yBxx7M4rst3fqEoJxW4Tyk5sqwgQ5D4ILfC9CnAyDFH35C-draX9J8UoYIhDn_8aIzDQ3yMNWnJxYbgmsKbG3ESpZMVcj1Nbz1Znz49jOA-q_wN7d47VdNs4ocN10pQ"
       }
     })
       .then(async (response) => {
@@ -237,41 +278,41 @@ class TemplateResultScreen extends React.Component {
     const URL_PIC = this.props.navigation.getParam('urlData')
     const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
     axios.post(URL,
-        {
-            "url": URL_PIC
+      {
+        "url": URL_PIC
+      },
+      {
+        headers: {
+          "Ocp-Apim-Subscription-Key": "f11b92ee29dd417ba1460c45e420d9ee"
         },
-        {
-            headers: {
-                "Ocp-Apim-Subscription-Key": "f11b92ee29dd417ba1460c45e420d9ee"
-            },
 
-        })
-        .then( async (response) => {
-          console.log("sec run")
-            // console.log(response.data[0].faceId);
-            console.log(response)
-            console.log(response.data[0].faceId)
-            this.faceDetect(response.data[0].faceId)
-          
-        })
+      })
+      .then(async (response) => {
+        console.log("sec run")
+        // console.log(response.data[0].faceId);
+        console.log(response)
+        console.log(response.data[0].faceId)
+        this.faceDetect(response.data[0].faceId)
+
+      })
 
 
-        .catch(function (error) {
-            return false
-        });
+      .catch(function (error) {
         return false
-}
+      });
+    return false
+  }
   // Hàm này kiểm tra xem trên cmnd có face ko
   faceDetect(result) {
-    console.log("here"+result)
-    if(result != null){
+    console.log("here" + result)
+    if (result != null) {
       this.templateProcessing();
     }
     else {
       this.setState({
-        alertError:"Face không hợp lệ"
-      },()=>{
-        this.setState({isLoading:false})
+        alertError: "Face không hợp lệ"
+      }, () => {
+        this.setState({ isLoading: false })
       })
     }
   }
@@ -327,14 +368,14 @@ class TemplateResultScreen extends React.Component {
 
   // Function này sẽ display ra kết quả của quá trình xử lý
   whenDone() {
-    console.log("run here"+this.state.alertError)
+    console.log("run here" + this.state.alertError)
     return (
       <Result
         onPressButton={() => this.props.navigation.navigate('Form', { userInfo: this.state.result })}
         nofication="Đã chuẩn template"
         message="Mời bạn tiếp tục"
         isError={this.state.alertError}
-       // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
+      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
       >
       </Result>
     )
@@ -537,7 +578,9 @@ const styles = StyleSheet.create({
 
 const root = createStackNavigator(
   {
-    Home: DetectIDScreen,
+    Home: HomeScreen,
+    ListToDoScreen: ListToDoScreen,
+    DetectIDScreen: DetectIDScreen,
     templateProcessing: TemplateResultScreen,
     Form: FormScreen,
     formProcessing: FormResultScreen,
@@ -547,8 +590,6 @@ const root = createStackNavigator(
   {
     initialRouteName: 'Home',
     defaultNavigationOptions: {
-      headerTitle: () => <Logo></Logo>,
-      headerRight: () => <IconToggle name="menu" color="black" />,
 
     },
   }
