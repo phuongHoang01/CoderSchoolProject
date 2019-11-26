@@ -26,7 +26,7 @@ export default class home extends React.Component {
         super(props)
         this.state = {
             progress: this.props.currentStatus,
-            screen : "",
+            screen: "",
             currentProcessStatus: [
                 {
                     "id": 1,
@@ -57,17 +57,29 @@ export default class home extends React.Component {
         }
     }
 
-    onPressSwitchScreen(id){
-       for (const iterator of this.state.currentProcessStatus) {
-            switch(id){
-                case 1 : 
-                    return this.setState({screen:"DetectIDScreen"})
-                case 2 : 
-                    return this.setState({screen:"Form"})
-                case 3 : 
-                    return this.setState({screen:"faceRecognize"})
+    onPressSwitchScreen(id) {
+        this.setState({
+            screen: ''
+        }, () => {
+            console.log("here"+this.state.screen)
+            for (const iterator of this.state.currentProcessStatus) {
+                switch (id) {
+                    case 1:
+                        return this.setState({ screen: "DetectIDScreen" },()=>{
+                            this.props.onPress(this.state.screen)
+                        })
+                    case 2:
+                        return this.setState({ screen: "Form" },()=>{
+                            this.props.onPress(this.state.screen)
+                        })
+                    case 3:
+                        return this.setState({ screen: "faceRecognize" },()=>{
+                            this.props.onPress(this.state.screen)
+                        })
+                }
             }
-       }
+        })
+
     }
 
 
@@ -101,7 +113,7 @@ export default class home extends React.Component {
                 </View>
                 <View style={styles.body}>
                     <View style={styles.bodySwagger}>
-                        <View style={{alignItems:'center',marginTop:0}}>
+                        <View style={{ alignItems: 'center', marginTop: 0 }}>
                             <Text style={{ fontSize: 18, color: '#f0faf6' }}>{this.state.progress}% complete</Text>
                             <Text style={styles.title}>Fraud Detection</Text>
                         </View>
@@ -125,15 +137,12 @@ export default class home extends React.Component {
                                             containerStyle={{
                                                 backgroundColor: "#3bbd81",
                                                 borderWidth: 0,
-                                                width:"90%"
+                                                width: "90%"
                                             }}
-                                            onPress={()=>{
-                                                this.onPressSwitchScreen(item.id)
-                                                return this.props.onPress(this.state.screen)
-                                            }}
+                                            onPress={() => this.onPressSwitchScreen(item.id)}
                                         />
 
-                                        <IconToggle style={{width:"10%"}} name="chevron-right" size={30} color="#98B6DA"/>
+                                        <IconToggle style={{ width: "10%" }} name="chevron-right" size={30} color="#98B6DA" />
                                     </View>
                                 )
                             }
@@ -229,10 +238,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    checkBox : {
-        alignItems:'center',
-        flexDirection:'row',
-        width:"100%"
+    checkBox: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: "100%"
     }
 
 

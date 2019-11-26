@@ -57,6 +57,7 @@ class ListToDoScreen extends React.Component {
   onPress = (Screen) => {
     console.log(Screen)
     return this.props.navigation.navigate(Screen)
+  
   }
 
   render() {
