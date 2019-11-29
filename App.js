@@ -24,10 +24,12 @@ import DetectSrceen from './src/View/detect_id_srceen/DetectScreen'
 import DetectFaceSrceen from './src/View/detect_face_srceen/DetectFaceScreen'
 import Logo from './src/template/Logo';
 import WaitingScreen from './src/View/waiting_screen/WaitingSrceen'
-import Result from './src/View/result_screen/Result'
+import Succes from './src/View/result_screen/Succes'
+import Fail from './src/View/result_screen/Fail'
 import Form from './src/View/form_screen/forms_srceen'
 import Home from './src/new_ui/home'
 import Fraud from './src/new_ui/fraud'
+import Face from './src/new_ui/face'
 import axios from 'axios'
 
 
@@ -57,7 +59,6 @@ class ListToDoScreen extends React.Component {
   onPress = (Screen) => {
     console.log(Screen)
     return this.props.navigation.navigate(Screen)
-  
   }
 
   render() {
@@ -126,6 +127,11 @@ class DetectIDScreen extends React.Component {
 
 //--------------------------------------------------------------
 class TemplateResultScreen extends React.Component {
+  static navigationOptions = {
+    headerStyle: {
+      elevation: 0
+    },
+  };
   constructor(props) {
     super(props)
     this.state = {
@@ -139,9 +145,9 @@ class TemplateResultScreen extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.pictureFormCMND()
-  }
+  // componentDidMount() {
+  //   this.pictureFormCMND()
+  // }
 
 
   // Hàm này tìm lỗi 
@@ -363,26 +369,53 @@ class TemplateResultScreen extends React.Component {
 
   whenLoading() {
     return (
-      <WaitingScreen nofication="Đang xử lý ảnh ..." />
+      <WaitingScreen nofication="Processing ..."
+        decription="We have auto recognized National ID base on original template  "
+      />
     )
+  }
+
+  checkError() {
+    if (this.state.alertError != null) {
+      return(
+      <Fail
+        nofication="Uh-Oh! Process not complete."
+        decription="We can't auto recognized National ID base on original template  "
+      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
+      >
+      </Fail>
+      )
+    }
+    else {
+      return(
+      <Succes
+        nofication="Great!, National ID's already."
+        decription="We have auto recognized National ID base on original template "
+      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
+      >
+      </Succes>
+      )
+    }
+
   }
 
   // Function này sẽ display ra kết quả của quá trình xử lý
   whenDone() {
     console.log("run here" + this.state.alertError)
-    return (
-      <Result
-        onPressButton={() => this.props.navigation.navigate('Form', { userInfo: this.state.result })}
-        nofication="Đã chuẩn template"
-        message="Mời bạn tiếp tục"
-        isError={this.state.alertError}
-      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
-      >
-      </Result>
-    )
+    return this.checkError();
   }
   //Kiểm tra processing nếu xong rồi thì trả ra kết quả
+
+  FunctionOnlyForTest() {
+    setTimeout(() => this.setState({
+      isLoading: false
+    }, () => {
+      console.log(this.state.isLoading)
+    }), 3000)
+  }
+
   checkResult() {
+    this.FunctionOnlyForTest()
     if (this.state.isLoading == true) {
       return this.whenLoading();
     }
@@ -403,10 +436,11 @@ class FormResultScreen extends React.Component {
     super(props)
     this.state = {
       isLoading: true,
-
+      
     }
+    
   }
-
+  
   whenLoading() {
     return (
       <WaitingScreen nofication="Đang xử lý thông tin" />
@@ -415,14 +449,14 @@ class FormResultScreen extends React.Component {
 
   // Function này sẽ display ra kết quả của quá trình xử lý
   whenDone() {
-    return (
-      <Result
-        onPress={() => this.props.navigation.navigate('faceRecognize')}
-        nofication="Thông tin trùng khớp"
-        message="Mời bạn tiếp tục"
-      >
-      </Result>
-    )
+    // return (
+    //   <Result
+    //     onPress={() => this.props.navigation.navigate('faceRecognize')}
+    //     nofication="Thông tin trùng khớp"
+    //     message="Mời bạn tiếp tục"
+    //   >
+    //   </Result>
+    // )
   }
   //Kiểm tra processing nếu xong rồi thì trả ra kết quả
   checkResult() {
@@ -436,7 +470,6 @@ class FormResultScreen extends React.Component {
   }
 
   FunctionOnlyForTest() {
-
     setTimeout(() => this.setState({
       isLoading: false
     }, () => {
@@ -453,17 +486,19 @@ class FormResultScreen extends React.Component {
 }
 
 class FormScreen extends React.Component {
+  static navigationOptions = {
+    headerStyle: {
+      elevation: 0,
+      backgroundColor: 'rgba(52, 52, 52, alpha)'
+    },
+  };
   render() {
     const imageData = this.props.navigation.getParam('userInfo')
     return (
-      <View style={styles.container}>
-        <Title title="Xác minh thông tin"></Title>
         <Form
-
           imageData={imageData}
           onPress={() => this.props.navigation.navigate('formProcessing')}
         ></Form>
-      </View>
     )
   }
 }
@@ -472,9 +507,11 @@ class FormScreen extends React.Component {
 
 class FaceRecognize extends React.Component {
   static navigationOptions = {
-    headerTitle: () => <Logo></Logo>,
-    headerRight: () => { }
-  }
+    headerStyle: {
+      elevation: 0,
+      backgroundColor: 'transparent'
+    },
+  };
   getResultFaceRecognize = (data) => {
     if (data) {
       console.log("get from face recognize" + data)
@@ -483,13 +520,9 @@ class FaceRecognize extends React.Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Title title="Xác minh CMND"></Title>
-        <DetectFaceSrceen
-          onPressCompare={this.getResultFaceRecognize}
-          uri='https://www.stickpng.com/assets/images/585e4bf3cb11b227491c339a.png'
-        />
-      </View>
+      <Face
+      nofication 
+      />
     )
   }
 }
@@ -511,14 +544,14 @@ class FaceResultScreen extends React.Component {
 
   // Function này sẽ display ra kết quả của quá trình xử lý
   whenDone() {
-    return (
-      <Result
-        onPress={() => this.props.navigation.navigate('faceProcessing')}
-        nofication="Trùng khớp 80%"
-        message="Xác nhận CMND thật"
-      >
-      </Result>
-    )
+    // return (
+    //   <Result
+    //     onPress={() => this.props.navigation.navigate('faceProcessing')}
+    //     nofication="Trùng khớp 80%"
+    //     message="Xác nhận CMND thật"
+    //   >
+    //   </Result>
+    // )
   }
   //Kiểm tra processing nếu xong rồi thì trả ra kết quả
   checkResult() {

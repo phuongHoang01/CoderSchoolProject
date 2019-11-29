@@ -6,13 +6,16 @@ import {
     View,
     Text,
     StatusBar,
-    ActivityIndicator,
+    Image,
+    TouchableOpacity,
     Animated,
     Easing
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-export default class WaitingSrceen extends React.Component {
+import { Button } from 'react-native-material-ui/src';
 
+
+export default class Result extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -20,29 +23,30 @@ export default class WaitingSrceen extends React.Component {
             isError: this.props.isError
         }
     }
+
     componentDidMount() {
         Animated.timing(this.state.success, {
             toValue: 1,
-            duration: 3000,
+            duration: 2000,
             easing: Easing.linear,
         }).start();
     }
+
 
     render() {
         return (
             <View style={styles.container}>
                 <LottieView style={{ width: "80%", height: 300, alignSelf: 'center', }}
-                    source={require('../../assets/Animation/cmnd.json')}
+                    source={require('../../assets/Animation/fail.json')}
                     progress={this.state.success}
-                    loop={true}
-                    autoPlay={true} />
+                     />
                 <View style={
                     {
-                        alignItems:'center',
-                        justifyContent:'center',
-                        marginLeft:20,
-                        marginRight:20,
-                     }}>
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: 20,
+                        marginRight: 20,
+                    }}>
                     <Text style={styles.waitText}>{this.props.nofication}</Text>
                     <Text style={styles.decription}>{this.props.decription}</Text>
                 </View>
@@ -71,8 +75,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#bebebe',
         fontWeight: 'bold',
-        textAlign:'center',
-        lineHeight:29
+        textAlign: 'center',
+        lineHeight: 29
     }
 
 })

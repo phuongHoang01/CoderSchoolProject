@@ -119,11 +119,6 @@ export default class DetectFaceScreen extends React.Component {
                   <Text style={styles.buttonText}>Chụp</Text>
                 </TouchableOpacity>
                 {/* hàm test api */}
-                <TouchableOpacity style={styles.buttonStyle}
-                  onPress={this.sendPicToProcess}
-                >
-                  <Text style={styles.buttonText}>TestAPI</Text>
-                </TouchableOpacity>
               </View>
             ) : (
                 <View style={styles.container}>

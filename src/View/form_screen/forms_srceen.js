@@ -4,11 +4,14 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ImageBackground,
+  ScrollView
 } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage, ThemeConsumer } from 'react-native-elements'
 import { Input } from 'react-native-elements';
 import axios from 'axios'
 import ModalDropdown from 'react-native-modal-dropdown';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 export default class Form_Screen extends React.Component {
   constructor(props) {
     super(props)
@@ -161,7 +164,7 @@ export default class Form_Screen extends React.Component {
       console.log(this.state.name)
       if (this.state.name.toUpperCase() == resultFromCardID[i]) {
         hasValidName = true
-        spliceArray.splice(i,1);
+        spliceArray.splice(i, 1);
       }
     }
     console.log(spliceArray)
@@ -208,7 +211,7 @@ export default class Form_Screen extends React.Component {
       })
     }
 
-    
+
     //compare hometown
     var hasValidHomeTown = false
     for (var i = 0; i <= spliceArray.length; i++) {
@@ -239,38 +242,38 @@ export default class Form_Screen extends React.Component {
     for (var i = 0; i <= spliceArray.length; i++) {
       var a = this.confirmEnding(spliceArray[i], this.state.locale.replace(/Quan|Huyen|Xa|ThanhPho/g, ""))
       console.log(a)
-        if (this.state.locale == "") {
-          this.setState({
-            errorLocale: "Vui lòng chọn quận huyện",
-            error: true
-          })
-        } else if(a) {
-          this.setState({
-            errorLocale: ""
-          })
-          console.log(this.state.error)
-          if (this.state.error === false) {
-            await goToFaceDetect()
-          } else {
-            this.setState({
-              error: false
-            })
-          } 
-          return;
+      if (this.state.locale == "") {
+        this.setState({
+          errorLocale: "Vui lòng chọn quận huyện",
+          error: true
+        })
+      } else if (a) {
+        this.setState({
+          errorLocale: ""
+        })
+        console.log(this.state.error)
+        if (this.state.error === false) {
+          await goToFaceDetect()
         } else {
           this.setState({
-            errorLocale: "Không đúng thông tin",
-            error: true
+            error: false
           })
         }
+        return;
+      } else {
+        this.setState({
+          errorLocale: "Không đúng thông tin",
+          error: true
+        })
+      }
     }
-    
-   
+
+
   }
 
 
   confirmEnding(string, target) {
-    console.log("string"+string)
+    console.log("string" + string)
     console.log(target)
     let regex = new RegExp(target)
     return regex.test(string)
@@ -280,74 +283,358 @@ export default class Form_Screen extends React.Component {
   }
   render() {
     return (
-      <View style={styles.container} >
-        <View style={styles.message}>
+
+
+      <ImageBackground style={styles.container}
+        resizeMode="cover"
+        source={require('../../assets/backgroud.png')}
+      >
+        <View style={styles.body}>
+          <ScrollView>
+            <View style={styles.swaggerTitle}>
+              <Text style={styles.title}>Filling form</Text>
+              <Text style={styles.step}>Step 2 of 4</Text>
+            </View>
+            <View style={styles.form}>
+              <View style={{ marginTop: 38 }}>
+                <Text style={styles.label}>National ID number</Text>
+                <View style={styles.formInput}>
+                  <View style={
+                    {
+                      backgroundColor: '#BCE6D8',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 10,
+                      marginLeft: 2.5,
+                      borderRadius: 100
+                    }
+                  }>
+                    <Icon
+                      name='account-card-details'
+                      size={30}
+                      color='#46C188'
+                    />
+                  </View>
+
+                  <Input
+                    placeholder="Enter your National ID number"
+                    containerStyle={{ height: 56 }}
+                    inputContainerStyle={{ height: "100%", borderBottomWidth: 0 }}
+                    onChangeText={text => this.getCardID(text)}
+                    errorStyle={{ color: 'red', fontSize: 16 }}
+                    errorMessage={this.state.errorID}
+                    keyboardType="number-pad"
+                  />
+                </View>
+              </View>
+
+              <View style={{ marginTop: 38 }}>
+                <Text style={styles.label}>Name</Text>
+                <View style={styles.formInput}>
+                  <View style={
+                    {
+                      backgroundColor: '#BCE6D8',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 10,
+                      marginLeft: 2.5,
+                      borderRadius: 100
+                    }
+                  }>
+                    <Icon
+                      name='account'
+                      size={30}
+                      color='#46C188'
+                    />
+                  </View>
+
+                  <Input
+                    placeholder="Enter your full name"
+                    containerStyle={{ height: 56 }}
+                    inputContainerStyle={{ height: "100%", borderBottomWidth: 0 }}
+                    errorStyle={{ color: 'red',fontSize:15}}
+                    errorMessage={this.state.errorName}
+                    onChangeText={text => this.getName(text)}
+                  />
+                </View>
+              </View>
+
+              <View style={{ marginTop: 38 }}>
+                <Text style={styles.label}>Day of birth</Text>
+                <View style={styles.formInput}>
+                  <View style={
+                    {
+                      backgroundColor: '#BCE6D8',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 10,
+                      marginLeft: 2.5,
+                      borderRadius: 100
+                    }
+                  }>
+                    <Icon
+                      name='calendar'
+                      size={30}
+                      color='#46C188'
+                    />
+                  </View>
+
+                  <Input
+                    placeholder="DD/MM/YYYY"
+                    containerStyle={{ height: 56 }}
+                    inputContainerStyle={{ height: "100%", borderBottomWidth: 0 }}
+                    errorStyle={{ color: 'red',fontSize:15}}
+                    errorMessage={this.state.errorBirthDay}
+                    onChangeText={text => this.getBirthDay(text)}
+                    keyboardType="number-pad"
+                  />
+                </View>
+              </View>
+
+
+              <View style={{ marginTop: 38 }}>
+                <Text style={styles.label}>Hometown</Text>
+                <View style={styles.formInput}>
+                  <View style={
+                    {
+                      backgroundColor: '#BCE6D8',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 10,
+                      marginLeft: 2.5,
+                      borderRadius: 100
+                    }
+                  }>
+                    <Icon
+                      name='map-marker'
+                      size={30}
+                      color='#46C188'
+                    />
+                  </View>
+
+                  <ModalDropdown
+                    style={{
+                      position: 'relative',
+                      width: '85%',
+                      height: 56,
+                      justifyContent: 'center',
+                    }}
+                    textStyle={{
+                      paddingLeft: 10,
+                      fontSize: 17,
+                      opacity: 0.4,
+                    }}
+                    options={this.state.province}
+                    defaultValue="Choose your Home Town"
+                    onSelect={id => this.getHomeTown(id)}
+                    dropdownStyle={{
+                      width: "60%"
+                    }}
+                    dropdownTextStyle={
+                      {
+                        fontSize: 17,
+                        textAlign: 'center'
+                      }
+                    }
+                    accessible
+                  />
+
+                  <View style={
+                    {
+                      zIndex: -1,
+                      left: '50%',
+                      transform: [
+                        {
+                          translateX: 131,
+                        }
+
+                      ],
+                      position: 'absolute',
+                      borderWidth: 0.4,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 5,
+                      borderRadius: 100,
+
+                    }
+                  }>
+                    <Icon
+                      name='chevron-down'
+                      size={20}
+                      color='black'
+                    />
+                  </View>
+                </View>
+                  <Text style={{ color: 'red',fontSize:15,marginLeft:10 }}>{this.state.errorHomeTown}</Text>
+              </View>
+              <View style={styles.localeSwagger}>
+                <View style={{ marginTop: 38 }}>
+                  <Text style={styles.label}>Locale</Text>
+                  <View style={styles.locale}>
+                    <View style={
+                      {
+                        backgroundColor: '#BCE6D8',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        padding: 10,
+                        marginLeft: 2.5,
+                        borderRadius: 100
+                      }
+                    }>
+                      <Icon
+                        name='map-marker'
+                        size={30}
+                        color='#46C188'
+                      />
+                    </View>
+
+                    <ModalDropdown
+                      style={{
+                        position: 'relative',
+                        width: '70%',
+                        height: 56,
+                        justifyContent: 'center',
+                      }}
+                      textStyle={{
+                        fontWeight:'bold',
+                        paddingLeft: 10,
+                        fontSize: 15,
+                        opacity: 0.4
+                      }}
+                      options={this.state.province}
+                      defaultValue="Province"
+                      onSelect={id => this.getLocaleDistrict(id)}
+                      dropdownStyle={{
+                        width: "30%"
+                      }}
+                      dropdownTextStyle={
+                        {
+                          fontSize: 17,
+                          textAlign: 'center'
+                        }
+                      }
+                      accessible
+                    />
+
+                    <View style={
+                      {
+                        zIndex: -1,
+                        left: '50%',
+                        transform: [
+                          {
+                            translateX: 50,
+                          }
+
+                        ],
+                        position: 'absolute',
+                        borderWidth: 0.4,
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        padding: 5,
+                        borderRadius: 100,
+
+                      }
+                    }>
+                      <Icon
+                        name='chevron-down'
+                        size={20}
+                        color='black'
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View style={{ marginTop: 38 }}>
+                  <View style={[styles.locale,{marginTop:30}]}>
+                    <View style={
+                      {
+                        backgroundColor: '#BCE6D8',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        padding: 10,
+                        marginLeft: 2.5,
+                        borderRadius: 100
+                      }
+                    }>
+                      <Icon
+                        name='map-marker'
+                        size={30}
+                        color='#46C188'
+                      />
+                    </View>
+
+                    <ModalDropdown
+                      style={{
+                        
+                        position: 'relative',
+                        width: '70%',
+                        height: 56,
+                        justifyContent: 'center',
+                      }}
+                      textStyle={{
+                        fontWeight:'bold',
+                        paddingLeft: 10,
+                        fontSize: 15,
+                        opacity: 0.4
+                      }}
+                      options={this.state.district}
+                      defaultValue="Distric"
+                      onSelect={id => this.getLocale(id)}
+                      dropdownStyle={{
+                        width: "30%"
+                      }}
+                      dropdownTextStyle={
+                        {
+                          fontSize: 17,
+                          textAlign: 'center'
+                        }
+                      }
+                      accessible
+                    />
+
+                    <View style={
+                      {
+                        zIndex: -1,
+                        left: '50%',
+                        transform: [
+                          {
+                            translateX: 50,
+                          }
+
+                        ],
+                        position: 'absolute',
+                        borderWidth: 0.4,
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        padding: 5,
+                        borderRadius: 100,
+
+                      }
+                    }>
+                      <Icon
+                        name='chevron-down'
+                        size={20}
+                        color='black'
+                      />
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <Text style={{ color: 'red',marginLeft:20}}>{this.state.errorLocale}</Text>
+              <TouchableOpacity style={styles.buttonStyle}
+                onPress={this.handleSubmit}
+              >
+                <Text style={styles.buttonText}>Compare</Text>
+              </TouchableOpacity>
+
+              <ImageBackground
+                source={require('../../assets/2.png')}
+                style={{width:100,height:100,alignSelf:'center'}}
+              />
+            </View>
+          </ScrollView>
         </View>
-
-        <View style={styles.from}>
-          <View style={styles.input}>
-            <Input
-              errorStyle={{ color: 'red' }}
-              errorMessage={this.state.errorID}
-              placeholder='Số CMND'
-              keyboardType="number-pad"
-              onChangeText={text => this.getCardID(text)}
-            />
-          </View>
-
-          <View style={styles.input}>
-            <Input
-              errorStyle={{ color: 'red' }}
-              errorMessage={this.state.errorName}
-              placeholder='Họ tên'
-              onChangeText={text => this.getName(text)}
-            />
-          </View>
-
-          <View style={styles.input}>
-            <Input
-              errorStyle={{ color: 'red' }}
-              errorMessage={this.state.errorBirthDay}
-              placeholder='Sinh ngày'
-              onChangeText={text => this.getBirthDay(text)}
-            />
-          </View>
-
-          <View style={styles.inputDropdown}>
-            <Text style={{fontSize:15,fontWeight:'bold'}}>Nguyên quán: </Text>
-            <ModalDropdown
-              style={{marginLeft:30}}
-              options={this.state.province}
-              defaultValue="Chọn tỉnh thành"
-              onSelect={id => this.getHomeTown(id)}
-            />
-            <Text style={{ color: 'red' }}>{this.state.errorHomeTown}</Text>
-          </View>
-
-          <View style={styles.inputDropdown}>
-            <Text style={{fontSize:15,fontWeight:'bold'}}>Nơi ĐKHK thường trú:</Text>
-            <ModalDropdown
-              style={{marginRight:6,marginLeft:6}}
-              options={this.state.province}
-              defaultValue="Chọn tỉnh thành"
-              onSelect={id => this.getLocaleDistrict(id)}
-            />
-            <ModalDropdown
-              options={this.state.district}
-              defaultValue="Chọn quận/huyện"
-              onSelect={id => this.getLocale(id)}
-            />
-            <Text style={{ color: 'red' }}>{this.state.errorLocale}</Text>
-          </View>
-
-          <TouchableOpacity style={styles.buttonStyle}
-            onPress={this.handleSubmit}
-          >
-            <Text style={styles.buttonText}>Tiếp tục</Text>
-          </TouchableOpacity>
-
-        </View>
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -355,18 +642,30 @@ export default class Form_Screen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.9,
-    justifyContent: 'flex-start',
-    backgroundColor: '#FFFFFF'
-
+    flex: 1,
   },
 
-  message: {
+  body: {
+    flex: 1,
   },
 
-  form: {
-
+  title: {
+    fontSize: 30,
+    color: "#3bbd81",
+    fontWeight: 'bold'
   },
+
+  step: {
+    fontSize: 17,
+    opacity: 0.4
+  },
+
+  swaggerTitle: {
+    marginTop: 20,
+    alignItems: 'center'
+  },
+
+
 
   input: {
     marginTop: 23,
@@ -381,11 +680,12 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    width: 150,
-    margin: 10,
+    margin:6,
+    width: 200,
     height: 50,
-    borderRadius: 10,
-    alignItems: 'center',
+    borderRadius: 30,
+    alignSelf:'center',
+    alignItems:'center',
     justifyContent: 'center',
     backgroundColor: '#04B431',
   },
@@ -401,6 +701,42 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'flex-end',
+  },
+
+  formInput: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 100,
+    borderColor: "#8FC7B4"
+  },
+
+  label: {
+    color: "#3bbd81",
+    fontSize: 19,
+    marginBottom: 10,
+    marginLeft: 7
+  },
+
+  form: {
+    marginLeft: 20,
+    marginRight: 20
+  },
+
+  localeSwagger: {
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-around'
+  },
+
+  locale : {
+    width: 180,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 100,
+    borderColor: "#8FC7B4"
   }
 
 
