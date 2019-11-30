@@ -15,6 +15,7 @@ import { RNCamera } from 'react-native-camera';
 import RNFS from 'react-native-fs'
 import axios from 'axios'
 import { transparent } from 'react-native-material-ui/src/styles/colors';
+import { IconToggle } from 'react-native-material-ui/src/'
 
 export default class DetectScreen extends React.Component {
   constructor(props) {
@@ -55,11 +56,7 @@ export default class DetectScreen extends React.Component {
   }
 
   renderFrame = () => (
-    <View style={{
-      display: "flex",
-      flexDirection: 'column',
-      justifyItems: "center",
-    }}>
+    <View style={styles.captureBox}>
       <React.Fragment>
         <View style={{
           margin: 20,
@@ -67,13 +64,13 @@ export default class DetectScreen extends React.Component {
           borderRadius: 2,
           borderColor: 'white',
           opacity: 0.4,
-          width: 300,
-          height: 400
+          width: 320,
+          height: 460
         }} >
         </View>
       </React.Fragment>
       <Text style={{ color: 'white', textAlign: 'center' }}>Please center the National ID card to the frame</Text>
-      <View style={{ display: "flex", flexDirection: 'row', justifyContent: "space-around", marginTop: 20 }}>
+      <View style={{ display: "flex", flexDirection: 'row', justifyContent: "space-around", marginTop: 20, marginBottom: 20 }}>
         <TouchableOpacity style={styles.buttonStyleTrans}
           onPress={this.exitCamera}
         >
@@ -104,24 +101,33 @@ export default class DetectScreen extends React.Component {
           </RNCamera> :
           <View>
             {this.state.base64ImageData === "" ? (
-              <View>
-                <View style={styles.swaggerTitle}>
-                  <Text style={styles.title}>Capture National ID</Text>
-                  <Text style={styles.step}>Step 1 of 4</Text>
+              <View style={styles.captureBox}>
+                <View style={styles.topNavBar}>
+                  <IconToggle style={{ width: "10%" }} name="keyboard-arrow-left" size={30} color="#3BBD81" onPress={this.props.onPressBack} />
+                  <Text style={{ color: '#3BBD81', marginTop: 20, marginLeft: -13 }}>Back</Text>
+                </View>
+                <View>
+                  <View style={styles.swaggerTitle}>
+                    <Text style={styles.title}>Capture National ID</Text>
+                    <Text style={styles.step}>Step 1 of 4</Text>
+                  </View>
+                  <Image
+                    style={styles.image}
+                    source={require('../../assets/78487490_1460127677472949_5655837347414016000_n.png')}
+                  />
+                  <TouchableOpacity style={styles.buttonStyle}
+                    onPress={() => this.openCamera()}
+                  >
+                    <Text style={styles.buttonText}>Capture</Text>
+                  </TouchableOpacity>
                 </View>
                 <Image
-                  style={styles.image}
-                  source={require('../../assets/78487490_1460127677472949_5655837347414016000_n.png')}
+                  style={styles.imageLogoFE}
+                  source={require('../../assets/Logo.png')}
                 />
-                <TouchableOpacity style={styles.buttonStyle}
-                  onPress={() => this.openCamera()}
-                >
-                  <Text style={styles.buttonText}>Capture</Text>
-                </TouchableOpacity>
               </View>
             ) : (
-
-                <View>
+                <View >
                   <Image
                     style={styles.imageTaken}
                     source={{ uri: this.state.imageData }}
@@ -150,8 +156,15 @@ export default class DetectScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  captureBox: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
+    justifyContent: 'space-between'
   },
   image: {
     resizeMode: 'cover',
@@ -160,6 +173,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 30
   },
+  imageLogoFE: {
+    resizeMode: 'cover',
+    width: 250,
+    height: 70,
+    opacity: 0.5,
+    marginTop: 50
+  },
   imageTaken: {
     resizeMode: 'cover',
     width: '90%',
@@ -167,6 +187,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 30,
     borderRadius: 4
+  },
+  topNavBar: {
+    width: '100%',
+    height: 40,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
   },
   requirement: {
     fontSize: 25,
@@ -220,8 +247,8 @@ const styles = StyleSheet.create({
   preview: {
     flex: 1,
     alignItems: 'center',
-    width: 420,
-    height: 600,
+    width: '100%',
+    height: '100%',
   },
   title: {
     fontSize: 30,

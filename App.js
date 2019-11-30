@@ -105,16 +105,12 @@ class DetectIDScreen extends React.Component {
         console.log(error);
       });
   }
-  static navigationOptions = {
-    headerTitle: () => <Logo></Logo>,
-    headerRight: () => { }
-  }
-
   render() {
     return (
       <View style={styles.container}>
         <DetectSrceen
           onPressProcess={this.getBase64ImageData}
+          onPressBack={() => this.props.navigation.navigate('ListToDoScreen')}
         />
       </View>
     )
@@ -375,23 +371,23 @@ class TemplateResultScreen extends React.Component {
 
   checkError() {
     if (this.state.alertError != null) {
-      return(
-      <Fail
-        nofication="Uh-Oh! Process not complete."
-        decription="We can't auto recognized National ID base on original template  "
-      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
-      >
-      </Fail>
+      return (
+        <Fail
+          nofication="Uh-Oh! Process not complete."
+          decription="We can't auto recognized National ID base on original template  "
+        // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
+        >
+        </Fail>
       )
     }
     else {
-      return(
-      <Succes
-        nofication="Great!, National ID's already."
-        decription="We have auto recognized National ID base on original template "
-      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
-      >
-      </Succes>
+      return (
+        <Succes
+          nofication="Great!, National ID's already."
+          decription="We have auto recognized National ID base on original template "
+        // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
+        >
+        </Succes>
       )
     }
 
@@ -434,17 +430,13 @@ class FormResultScreen extends React.Component {
     super(props)
     this.state = {
       isLoading: true,
-      
     }
-    
   }
-  
   whenLoading() {
     return (
       <WaitingScreen nofication="Đang xử lý thông tin" />
     )
   }
-
   // Function này sẽ display ra kết quả của quá trình xử lý
   whenDone() {
     // return (
@@ -487,16 +479,16 @@ class FormScreen extends React.Component {
   static navigationOptions = {
     headerStyle: {
       elevation: 0,
-      backgroundColor: 'rgba(52, 52, 52, alpha)'
+      backgroundColor: 'transparent'
     },
   };
   render() {
     const imageData = this.props.navigation.getParam('userInfo')
     return (
-        <Form
-          imageData={imageData}
-          onPress={() => this.props.navigation.navigate('formProcessing')}
-        ></Form>
+      <Form
+        imageData={imageData}
+        onPress={() => this.props.navigation.navigate('formProcessing')}
+      ></Form>
     )
   }
 }
@@ -505,10 +497,7 @@ class FormScreen extends React.Component {
 
 class FaceRecognize extends React.Component {
   static navigationOptions = {
-    headerStyle: {
-      elevation: 0,
-      backgroundColor: 'transparent'
-    },
+    header: null,
   };
   getResultFaceRecognize = (data) => {
     if (data) {
@@ -518,8 +507,8 @@ class FaceRecognize extends React.Component {
   }
   render() {
     return (
-      <Face
-      nofication 
+      <DetectFaceSrceen
+        onPressBack={() => this.props.navigation.navigate('ListToDoScreen')}
       />
     )
   }
