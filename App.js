@@ -113,10 +113,8 @@ class DetectIDScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Title title="Xác minh CMND"></Title>
         <DetectSrceen
           onPressProcess={this.getBase64ImageData}
-          uri='https://png.pngtree.com/element_our/png_detail/20181227/camera-icon-designed-for-all-application-purpose-png_287858.jpg'
         />
       </View>
     )
