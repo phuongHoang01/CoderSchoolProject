@@ -263,7 +263,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     opacity: 0.4,
     textAlign: 'center',
-    marginTop: 30
+    marginTop: 30,
+    marginLeft: 20,
+    marginRight: 20
   },
   swaggerTitle: {
     alignItems: 'center',

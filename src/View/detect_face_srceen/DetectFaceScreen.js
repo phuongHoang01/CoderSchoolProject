@@ -97,7 +97,7 @@ export default class DetectScreen extends React.Component {
     return (
       <ImageBackground source={require('../../assets/backgroud.png')} style={styles.container}>
         {this.state.loadingCamera === true ?
-          <RNCamera ref={ref => { this.camera = ref }} style={styles.preview} ratio="4:3" >
+          <RNCamera ref={ref => { this.camera = ref }} style={styles.preview} ratio="4:3" type={RNCamera.Constants.Type.front} >
             {this.renderFrame}
           </RNCamera> :
           <View>
@@ -264,7 +264,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     opacity: 0.4,
     textAlign: 'center',
-    marginTop: 30
+    marginTop: 30,
+    marginLeft: 20,
+    marginRight: 20
   },
   swaggerTitle: {
     alignItems: 'center',
