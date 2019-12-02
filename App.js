@@ -139,9 +139,9 @@ class TemplateResultScreen extends React.Component {
     }
   }
 
-  // componentDidMount() {
-  //   this.pictureFormCMND()
-  // }
+  componentDidMount() {
+    this.pictureFormCMND()
+  }
 
 
   // Hàm này tìm lỗi 
@@ -262,7 +262,7 @@ class TemplateResultScreen extends React.Component {
       }
     }, {
       headers: {
-        "Authorization": "Bearer ya29.Il-yBxx7M4rst3fqEoJxW4Tyk5sqwgQ5D4ILfC9CnAyDFH35C-draX9J8UoYIhDn_8aIzDQ3yMNWnJxYbgmsKbG3ESpZMVcj1Nbz1Znz49jOA-q_wN7d47VdNs4ocN10pQ"
+        "Authorization": "Bearer ya29.Il-zBzUnA1g_aC4AFFTzi3fp1lshSg7Xse4nMax_iSlwVkVS4pqdMs8zTtfsD1uyrbzdxv65K4pYVQ8QAf8Vl7zBUHrRWrJDfVs_WWj7WPvY-BRNlEufD12TsOoZGHLUEw"
       }
     })
       .then(async (response) => {
@@ -370,10 +370,10 @@ class TemplateResultScreen extends React.Component {
   }
 
   checkError() {
-    if (this.state.alertError != null) {
+    if (this.state.alertError != "") {
       return (
         <Fail
-          nofication="Uh-Oh! Process not complete."
+          nofication={this.state.alertError}
           decription="We can't auto recognized National ID base on original template  "
         // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
         >
@@ -409,7 +409,7 @@ class TemplateResultScreen extends React.Component {
   }
 
   checkResult() {
-    this.FunctionOnlyForTest()
+    //this.FunctionOnlyForTest()
     if (this.state.isLoading == true) {
       return this.whenLoading();
     }

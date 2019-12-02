@@ -47,8 +47,10 @@ export default class Result extends React.Component {
                         marginLeft: 20,
                         marginRight: 20,
                     }}>
+                    <View style={{alignItems:'center'}}>
                     <Text style={styles.waitText}>{this.props.nofication}</Text>
                     <Text style={styles.decription}>{this.props.decription}</Text>
+                    </View>
                 </View>
             </View>
         )
@@ -65,8 +67,8 @@ const styles = StyleSheet.create({
 
     waitText: {
         marginTop: 20,
-        fontSize: 25,
-        color: '#04B431',
+        fontSize: 24,
+        color: 'red',
         fontWeight: 'bold',
     },
 
