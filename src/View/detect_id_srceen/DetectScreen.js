@@ -16,6 +16,7 @@ import RNFS from 'react-native-fs'
 import axios from 'axios'
 import { transparent } from 'react-native-material-ui/src/styles/colors';
 import { IconToggle } from 'react-native-material-ui/src/'
+import ImageEditor from "@react-native-community/image-editor";
 
 export default class DetectScreen extends React.Component {
   constructor(props) {
@@ -36,11 +37,23 @@ export default class DetectScreen extends React.Component {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      this.setState({
-        imageData: data.uri,
+      const cropData = {
+        offset: {
+          x: 80,
+          y: 20,
+        },
+        size: {
+          width: data.height,
+          height: data.height,
+        },
+      };
+      await ImageEditor.cropImage(data.uri, cropData).then(url => {
+        console.log("Cropped image uri", url);
+        this.setState({
+          imageData: url,
+        })
       })
-      //handle crop image goes here
-      const base64 = await this.getBase64(data.uri);
+      const base64 = await this.getBase64(this.state.imageData);
       this.setState({
         base64ImageData: base64,
         loadingCamera: false,
@@ -48,7 +61,6 @@ export default class DetectScreen extends React.Component {
     }
 
   };
-
   getBase64 = async (imageUri: String) => {
     const filepath = imageUri.split('//')[1];
     const imageUriBase64 = await RNFS.readFile(filepath, 'base64');
