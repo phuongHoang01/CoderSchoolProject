@@ -16,11 +16,11 @@ export default class Form_Screen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      cardID: "",
-      name: "",
-      birthDay: "",
-      homeTown: "",
-      locale: "",
+      cardID: "364152355",
+      name: "VONGUYENGIAHAN",
+      birthDay: "30122000",
+      homeTown: "TPHoChiMinh",
+      locale: "PhuNhuan",
       errorID: "",
       errorName: "",
       errorBirthDay: "",
@@ -39,7 +39,7 @@ export default class Form_Screen extends React.Component {
   getCardID(text) {
     let newText = this.xoa_dau(text).replace(/ /gi, '')
     this.setState({
-      cardID: "SO" + newText
+      cardID: newText
     })
   }
   getName(text) {
@@ -128,9 +128,19 @@ export default class Form_Screen extends React.Component {
       district: listDistrict
     })
   }
-  handleSubmit = async () => {
-    var resultFromCardID = this.props.imageData
-    var spliceArray = [...this.props.imageData]
+  handleSubmit = () => {
+    // var resultFromCardID = this.props.imageData
+    var onlyForTest = ["CONGHOAXAHOICHUNGHIAVIETNAM", "DoclapTudoHanhphuc", "GIAYCHUNGMINHNHANDAN", "VIETNAM", "So364152355", "HotenVONGUYENGIAHAN", "Sinhngay", "30122000", "NguyenquanTPHoChiMinh", "NoiDKHKthuongtru430NguyenKiem", "Phuong3quanPhuNhuan"];
+    var resultFromCardID = onlyForTest.map(item => item.replace(/So|Hoten|SO|Sinhngay|/g, ""))
+    for (var i = 0; i <= resultFromCardID.length; i++) {
+      console.log(resultFromCardID[i]);
+      if (resultFromCardID[i] == "") {
+        resultFromCardID.splice(i, 1);
+      }
+    }
+    console.log(resultFromCardID);
+    var spliceArray = [...resultFromCardID]
+    //var spliceArray = [...this.props.imageData]
     //compare cardID
     var hasValidID = false
     for (var i = 0; i <= resultFromCardID.length; i++) {
@@ -217,8 +227,10 @@ export default class Form_Screen extends React.Component {
     for (var i = 0; i <= spliceArray.length; i++) {
       if (this.confirmEnding(spliceArray[i], this.state.homeTown)) {
         hasValidHomeTown = true
+        break;
       }
     }
+
     if (hasValidHomeTown == false) {
       if (this.state.homeTown == "") {
         this.setState({
@@ -240,33 +252,33 @@ export default class Form_Screen extends React.Component {
     var hasValidLocale = false
     console.log(this.state.locale)
     for (var i = 0; i <= spliceArray.length; i++) {
-      var a = this.confirmEnding(spliceArray[i], this.state.locale.replace(/Quan|Huyen|Xa|ThanhPho/g, ""))
-      console.log(a)
-      if (this.state.locale == "") {
-        this.setState({
-          errorLocale: "Vui lòng chọn quận huyện",
-          error: true
-        })
-      } else if (a) {
-        this.setState({
-          errorLocale: ""
-        })
-        console.log(this.state.error)
-        if (this.state.error === false) {
-          await goToFaceDetect()
-        } else {
-          this.setState({
-            error: false
-          })
-        }
-        return;
-      } else {
-        this.setState({
-          errorLocale: "Không đúng thông tin",
-          error: true
-        })
+      if (this.confirmEnding(spliceArray[i], this.state.locale.replace(/Quan|Huyen|Xa|ThanhPho/g, ""))){
+        hasValidLocale=true;
+        break;
       }
+      
     }
+    if (this.state.locale == "") {
+      this.setState({
+        errorLocale: "Vui lòng chọn quận huyện",
+        error: true
+      }, () => {
+        return this.state.error;
+      })
+    } else if (hasValidLocale) {
+      this.setState({
+        errorLocale: ""
+      })
+    } else {
+      this.setState({
+        errorLocale: "Không đúng thông tin",
+        error: true
+      }, () => {
+        return this.state.error;
+      })
+    }
+
+    return this.state.error;
 
 
   }
@@ -352,7 +364,7 @@ export default class Form_Screen extends React.Component {
                     placeholder="Enter your full name"
                     containerStyle={{ height: 56 }}
                     inputContainerStyle={{ height: "100%", borderBottomWidth: 0 }}
-                    errorStyle={{ color: 'red',fontSize:15}}
+                    errorStyle={{ color: 'red', fontSize: 15 }}
                     errorMessage={this.state.errorName}
                     onChangeText={text => this.getName(text)}
                   />
@@ -383,7 +395,7 @@ export default class Form_Screen extends React.Component {
                     placeholder="DD/MM/YYYY"
                     containerStyle={{ height: 56 }}
                     inputContainerStyle={{ height: "100%", borderBottomWidth: 0 }}
-                    errorStyle={{ color: 'red',fontSize:15}}
+                    errorStyle={{ color: 'red', fontSize: 15 }}
                     errorMessage={this.state.errorBirthDay}
                     onChangeText={text => this.getBirthDay(text)}
                     keyboardType="number-pad"
@@ -465,7 +477,7 @@ export default class Form_Screen extends React.Component {
                     />
                   </View>
                 </View>
-                  <Text style={{ color: 'red',fontSize:15,marginLeft:10 }}>{this.state.errorHomeTown}</Text>
+                <Text style={{ color: 'red', fontSize: 15, marginLeft: 10 }}>{this.state.errorHomeTown}</Text>
               </View>
               <View style={styles.localeSwagger}>
                 <View style={{ marginTop: 38 }}>
@@ -496,7 +508,7 @@ export default class Form_Screen extends React.Component {
                         justifyContent: 'center',
                       }}
                       textStyle={{
-                        fontWeight:'bold',
+                        fontWeight: 'bold',
                         paddingLeft: 10,
                         fontSize: 15,
                         opacity: 0.4
@@ -545,7 +557,7 @@ export default class Form_Screen extends React.Component {
                 </View>
 
                 <View style={{ marginTop: 38 }}>
-                  <View style={[styles.locale,{marginTop:30}]}>
+                  <View style={[styles.locale, { marginTop: 30 }]}>
                     <View style={
                       {
                         backgroundColor: '#BCE6D8',
@@ -565,14 +577,14 @@ export default class Form_Screen extends React.Component {
 
                     <ModalDropdown
                       style={{
-                        
+
                         position: 'relative',
                         width: '70%',
                         height: 56,
                         justifyContent: 'center',
                       }}
                       textStyle={{
-                        fontWeight:'bold',
+                        fontWeight: 'bold',
                         paddingLeft: 10,
                         fontSize: 15,
                         opacity: 0.4
@@ -620,16 +632,20 @@ export default class Form_Screen extends React.Component {
                   </View>
                 </View>
               </View>
-              <Text style={{ color: 'red',marginLeft:20}}>{this.state.errorLocale}</Text>
+              <Text style={{ color: 'red', marginLeft: 20 }}>{this.state.errorLocale}</Text>
               <TouchableOpacity style={styles.buttonStyle}
-                onPress={this.handleSubmit}
+                onPress={() => {
+                  if (this.handleSubmit() == false) {
+                    return this.props.onPress()
+                  }
+                }}
               >
                 <Text style={styles.buttonText}>Compare</Text>
               </TouchableOpacity>
 
               <ImageBackground
                 source={require('../../assets/2.png')}
-                style={{width:100,height:100,alignSelf:'center'}}
+                style={{ width: 100, height: 100, alignSelf: 'center' }}
               />
             </View>
           </ScrollView>
@@ -680,12 +696,12 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    margin:6,
+    margin: 6,
     width: 200,
     height: 50,
     borderRadius: 30,
-    alignSelf:'center',
-    alignItems:'center',
+    alignSelf: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#04B431',
   },
@@ -725,12 +741,12 @@ const styles = StyleSheet.create({
   },
 
   localeSwagger: {
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'space-around'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
 
-  locale : {
+  locale: {
     width: 180,
     flexDirection: 'row',
     alignItems: 'center',

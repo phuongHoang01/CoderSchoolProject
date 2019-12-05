@@ -31,7 +31,11 @@ import Home from './src/new_ui/home'
 import Fraud from './src/new_ui/fraud'
 import Face from './src/new_ui/face'
 import axios from 'axios'
-
+import { createStore } from 'redux'
+import myReducer from './src/reducers/index'
+import { Provider } from 'react-redux'
+import AsyncStorage from '@react-native-community/async-storage';
+import NavigationService from './src/NavigationService/service'
 
 
 
@@ -57,11 +61,46 @@ class ListToDoScreen extends React.Component {
   };
 
   onPress = (Screen) => {
-    console.log(Screen)
-    return this.props.navigation.navigate(Screen)
+    console.log("render");
+    console.log(this.props.navigation.getParam('userInfo'));
+    console.log(this.props.navigation.getParam('faceInfo'));
+    switch (Screen) {
+
+      case "DetectIDScreen": {
+        return this.props.navigation.navigate(Screen, {
+          currentScreen: Screen,
+        })
+      }
+      case "Form": {
+        if (this.props.navigation.getParam('userInfo') != null) {
+          return this.props.navigation.navigate(Screen, {
+            currentScreen: Screen,
+            userInfo: this.props.navigation.getParam('userInfo')
+          })
+        }
+        else {
+          alert("Vui long hoàn thành theo các bước")
+          break;
+        }
+      }
+
+      case "faceRecognize": {
+        if(this.props.navigation.getParam('faceInfo') != null){
+        return this.props.navigation.navigate(Screen, {
+          currentScreen: Screen,
+          faceInfo: this.props.navigation.getParam('faceInfo')
+        })
+        }
+        else {
+          alert("Vui long hoàn thành theo các bước")
+          break;
+        }
+      }
+    }
   }
 
   render() {
+
     return (
       <Fraud
         currentStatus={50} // Tiến độ của feature
@@ -76,6 +115,11 @@ class DetectIDScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
+
+  componentDidMount() {
+
+  }
+
   getBase64ImageData = (data) => {
     if (data) {
       this.sendImageToRepository(data)
@@ -99,7 +143,7 @@ class DetectIDScreen extends React.Component {
       })
       .then(response => {
         console.log(response.data.data.link);
-        this.props.navigation.navigate('templateProcessing', { urlData: response.data.data.link, base64Image: image }) //Gửi link ảnh qua màng hình xử lý
+        this.props.navigation.navigate('templateProcessing', { urlData: response.data.data.link, base64Image: image, currentScreen: this.props.navigation.getParam('currentScreen') }) //Gửi link ảnh qua màng hình xử lý
       })
       .catch(function (error) {
         console.log(error);
@@ -135,11 +179,14 @@ class TemplateResultScreen extends React.Component {
       titleError: '',
       logoError: '',
       centerStarError: '',
-      alertError: ''
+      alertError: '',
+      faceInfo: '',
     }
   }
 
   componentDidMount() {
+    console.log("render")
+    console.log(this.props.navigation.getParam('currentScreen'))
     this.pictureFormCMND()
   }
 
@@ -165,7 +212,6 @@ class TemplateResultScreen extends React.Component {
   // Code củ chuối sẽ fix lại sau 
   // Hàm nãy sẽ gắn lỗi vào state
   checkTemplateData(templateData) {
-
     if (this.templateDataProccesing(templateData, "CenterStar")) {
       this.setState({
         centerStarError: ""
@@ -262,7 +308,7 @@ class TemplateResultScreen extends React.Component {
       }
     }, {
       headers: {
-        "Authorization": "Bearer ya29.Il-zBzUnA1g_aC4AFFTzi3fp1lshSg7Xse4nMax_iSlwVkVS4pqdMs8zTtfsD1uyrbzdxv65K4pYVQ8QAf8Vl7zBUHrRWrJDfVs_WWj7WPvY-BRNlEufD12TsOoZGHLUEw"
+        "Authorization": "Bearer ya29.Il-zB-ME7R_JBwwjRaVLxD3InsNbE-5SJDVCzBNGWxzJp-9t-ftGW1p0_gW8ljYyS4wNX6K2jn9ILy49_wcYEPFAjk21tQUAJ2w4NEGcDpSimFgb82S6ufAesSQZFM2Pcg"
       }
     })
       .then(async (response) => {
@@ -289,12 +335,8 @@ class TemplateResultScreen extends React.Component {
 
       })
       .then(async (response) => {
-        console.log("sec run")
-        // console.log(response.data[0].faceId);
-        console.log(response)
         console.log(response.data[0].faceId)
         this.faceDetect(response.data[0].faceId)
-
       })
 
 
@@ -305,9 +347,12 @@ class TemplateResultScreen extends React.Component {
   }
   // Hàm này kiểm tra xem trên cmnd có face ko
   faceDetect(result) {
-    console.log("here" + result)
     if (result != null) {
-      this.templateProcessing();
+      this.setState({
+        faceInfo: result
+      }, () => {
+        this.sendPicToProcess();
+      })
     }
     else {
       this.setState({
@@ -352,7 +397,7 @@ class TemplateResultScreen extends React.Component {
           var str2 = str.replace(/ /gi, '')
           result.push(str2)
         }//Show kết quả xử lý ở trên vào console.log dợi 10s dể show kết quả
-        this.setState({ result }, () => {
+        this.setState({ result }, async () => {
           console.log(this.state.result)
         })
         //Gửi thông tin qua màn hình waiting khi có thông tin này sẽ hết loading
@@ -383,8 +428,10 @@ class TemplateResultScreen extends React.Component {
     else {
       return (
         <Succes
+          currentScreen={this.props.navigation.getParam('currentScreen')}
           nofication="Great!, National ID's already."
           decription="We have auto recognized National ID base on original template "
+          onPress={() => this.props.navigation.navigate('ListToDoScreen', { userInfo: this.state.result, faceInfo: this.state.faceInfo })}
         // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
         >
         </Succes>
@@ -409,7 +456,7 @@ class TemplateResultScreen extends React.Component {
   }
 
   checkResult() {
-    //this.FunctionOnlyForTest()
+    // this.FunctionOnlyForTest()
     if (this.state.isLoading == true) {
       return this.whenLoading();
     }
@@ -419,6 +466,7 @@ class TemplateResultScreen extends React.Component {
   }
 
   render() {
+
     return (
       this.checkResult()
     )
@@ -432,45 +480,25 @@ class FormResultScreen extends React.Component {
       isLoading: true,
     }
   }
-  whenLoading() {
-    return (
-      <WaitingScreen nofication="Đang xử lý thông tin" />
-    )
+  static navigationOptions = {
+    headerStyle: {
+      elevation: 0
+    },
+  };
+  componentDidMount() {
+    console.log(this.props.navigation.getParam('currentScreen'))
   }
-  // Function này sẽ display ra kết quả của quá trình xử lý
-  whenDone() {
-    // return (
-    //   <Result
-    //     onPress={() => this.props.navigation.navigate('faceRecognize')}
-    //     nofication="Thông tin trùng khớp"
-    //     message="Mời bạn tiếp tục"
-    //   >
-    //   </Result>
-    // )
-  }
-  //Kiểm tra processing nếu xong rồi thì trả ra kết quả
-  checkResult() {
-    this.FunctionOnlyForTest()
-    if (this.state.isLoading == true) {
-      return this.whenLoading();
-    }
-    else {
-      return this.whenDone();
-    }
-  }
-
-  FunctionOnlyForTest() {
-    setTimeout(() => this.setState({
-      isLoading: false
-    }, () => {
-      console.log(this.state.isLoading)
-    }), 3000)
-  }
-
 
   render() {
     return (
-      this.checkResult()
+      <Succes
+        currentScreen={this.props.navigation.getParam('currentScreen')}
+        nofication="Great!, 1 Step to go."
+        decription="We have auto recognized National ID base on original template "
+        onPress={() => this.props.navigation.navigate('ListToDoScreen')}
+      // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
+      >
+      </Succes>
     )
   }
 }
@@ -482,12 +510,12 @@ class FormScreen extends React.Component {
       backgroundColor: 'transparent'
     },
   };
+
   render() {
-    const imageData = this.props.navigation.getParam('userInfo')
     return (
       <Form
-        imageData={imageData}
-        onPress={() => this.props.navigation.navigate('formProcessing')}
+        imageData={this.props.navigation.getParam('userInfo')}
+        onPress={() => this.props.navigation.navigate('formProcessing', { currentScreen: this.props.navigation.getParam('currentScreen') })}
       ></Form>
     )
   }
@@ -501,13 +529,37 @@ class FaceRecognize extends React.Component {
   };
   getResultFaceRecognize = (data) => {
     if (data) {
-      console.log("get from face recognize" + data)
-      this.props.navigation.navigate('faceProcessing', { resultCompare: data })
+      this.sendImageToRepository(data);
     }
   }
+
+  sendImageToRepository(image) {
+    console.log('run here')
+    const imageAfterReplace = image.replace("data:image/jpeg;base64,", "");
+    const URL = "https://api.imgur.com/3/upload" //url của api
+    axios.post(URL,
+      {
+        "image": imageAfterReplace
+      },
+      {
+        headers: {
+          "Authorization": "Bearer baca0f3689d1415c7c45f6fe2f91717cbc3141b4"
+        },
+
+      })
+      .then(response => {
+        console.log(response.data.data.link);
+        this.props.navigation.navigate('faceProcessing', { faceUrl: response.data.data.link,faceInfo:this.props.navigation.getParam('faceInfo')});
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   render() {
     return (
       <DetectFaceSrceen
+        onPressProcess={this.getResultFaceRecognize}
         onPressBack={() => this.props.navigation.navigate('ListToDoScreen')}
       />
     )
@@ -519,30 +571,138 @@ class FaceResultScreen extends React.Component {
     super(props)
     this.state = {
       isLoading: true,
-
+      alertError: '',
     }
+  }
+
+  static navigationOptions = {
+    headerStyle: {
+      elevation: 0
+    },
+  };
+
+  componentDidMount(){
+    this.pictureFormSelfie();
+  }
+
+  pictureFormSelfie = () => {
+    console.log("first run")
+    const URL_PIC = "https://vnn-imgs-f.vgcloud.vn/2019/11/16/10/ngoc-trinh-len-tieng-benh-vuc-khi-cong-phuong-bi-che-da-do-1.jpg"//this.props.navigation.getParam('faceUrl')
+    const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
+    axios.post(URL,
+      {
+        "url": URL_PIC
+      },
+      {
+        headers: {
+          "Ocp-Apim-Subscription-Key": "f11b92ee29dd417ba1460c45e420d9ee"
+        },
+
+      })
+      .then(async (response) => {
+        console.log(response.data[0].faceId)
+        this.faceDetect(response.data[0].faceId)
+      })
+      .catch(function (error) {
+        return false
+      });
+    return false
+  }
+
+  faceDetect(result) {
+    if (result != null) {
+      this.faceRecognition(result, this.props.navigation.getParam('faceInfo'));
+    }
+    else {
+      this.setState({
+        alertError: "Face không hợp lệ"
+      }, () => {
+        this.setState({ isLoading: false })
+      })
+    }
+  }
+
+
+
+  faceRecognition = (faceId01, faceId02) => {
+    console.log(faceId01)
+    console.log(faceId02)
+    const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/verify"
+    axios.post(URL,
+      {
+        "faceId1": faceId01,
+        "faceId2": faceId02
+      },
+      {
+        headers: {
+          "Ocp-Apim-Subscription-Key": "f11b92ee29dd417ba1460c45e420d9ee"
+        },
+
+      })
+      .then( async (response) =>{
+        this.faceVerify(response.data);
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+  faceVerify(result) {
+    if(result.isIdentical == true && result.confidence >=0.6){
+      this.setState({
+        alertError:''
+      })
+    }
+    else {
+      this.setState({
+        alertError:'Please take another selfie'
+      },()=>{
+        this.setState({
+          isLoading:false
+        })
+      })
+    }
+  }
+
+  checkError() {
+    if (this.state.alertError != "") {
+      return (
+        <Fail
+          nofication={this.state.alertError}
+          decription="We can't auto recognized National ID base on original template  "
+        >
+        </Fail>
+      )
+    }
+    else {
+      return (
+        <Succes
+          currentScreen={this.props.navigation.getParam('currentScreen')}
+          nofication="Great!, National ID's already."
+          decription="We have auto recognized National ID base on original template "
+          onPress={() => this.props.navigation.navigate('ListToDoScreen')}
+        >
+        </Succes>
+      )
+    }
+
   }
 
   whenLoading() {
     return (
-      <WaitingScreen nofication="Đang xử lý thông tin" />
+      <WaitingScreen nofication="Processing ..."
+        decription="We have auto recognized National ID base on original template  "
+      />
     )
   }
 
-  // Function này sẽ display ra kết quả của quá trình xử lý
-  whenDone() {
-    // return (
-    //   <Result
-    //     onPress={() => this.props.navigation.navigate('faceProcessing')}
-    //     nofication="Trùng khớp 80%"
-    //     message="Xác nhận CMND thật"
-    //   >
-    //   </Result>
-    // )
+whenDone() {
+    console.log("run here" + this.state.alertError)
+    return this.checkError();
   }
   //Kiểm tra processing nếu xong rồi thì trả ra kết quả
   checkResult() {
-    this.thisFunctionOnlyForTest()
+   // this.thisFunctionOnlyForTest()
     if (this.state.isLoading == true) {
       return this.whenLoading();
     }
@@ -552,7 +712,6 @@ class FaceResultScreen extends React.Component {
   }
 
   thisFunctionOnlyForTest() {
-
     setTimeout(() => this.setState({
       isLoading: false
     }, () => {
@@ -617,11 +776,17 @@ const root = createStackNavigator(
 )
 
 const AppContainer = createAppContainer(root)
-
+const store = createStore(myReducer)
 export default class App extends React.Component {
   render() {
     return (
-      <AppContainer />
+      <Provider store={store}>
+        <AppContainer
+          ref={navigatorRef => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+        />
+      </Provider>
     )
   }
 }

@@ -52,6 +52,15 @@ export default class Result extends React.Component {
                     <Text style={styles.decription}>{this.props.decription}</Text>
                     </View>
                 </View>
+
+                <TouchableOpacity style={styles.buttonStyle}
+                    onPress={() => {
+                        return this.updateStep();
+
+                    }}
+                >
+                    <Text style={styles.buttonText}>Take again</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -68,7 +77,7 @@ const styles = StyleSheet.create({
     waitText: {
         marginTop: 20,
         fontSize: 24,
-        color: 'red',
+        color: '#FA5858',
         fontWeight: 'bold',
     },
 
@@ -79,6 +88,23 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         lineHeight: 29
-    }
+    },
+
+    buttonStyle: {
+        marginTop: 40,
+        width: 150,
+        height: 48,
+        borderRadius: 30,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FA5858',
+    },
+
+    buttonText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: "bold",
+    },
 
 })

@@ -18,42 +18,43 @@ import { IconToggle } from 'react-native-material-ui/src/'
 import { CheckBox } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Entypo'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import {connect} from 'react-redux'
 
 
 const { width, height } = Dimensions.get('window')
-export default class home extends React.Component {
+class Fraud extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             progress: this.props.currentStatus,
             screen: "",
-            currentProcessStatus: [
-                {
-                    "id": 1,
-                    "name": "Detect National ID template from photo",
-                    "value": true
-                },
+            // currentProcessStatus: [
+            //     {
+            //         "id": 1,
+            //         "name": "Detect National ID template from photo",
+            //         "value": true
+            //     },
 
-                {
-                    "id": 2,
-                    "name": "Filling form and compare with the result from Nation ID OCR result ",
-                    "value": true
-                },
+            //     {
+            //         "id": 2,
+            //         "name": "Filling form and compare with the result from Nation ID OCR result ",
+            //         "value": true
+            //     },
 
-                {
-                    "id": 3,
-                    "name": "Capture face from camera and compare with the face from Nation ID card",
-                    "value": false
-                },
+            //     {
+            //         "id": 3,
+            //         "name": "Capture face from camera and compare with the face from Nation ID card",
+            //         "value": false
+            //     },
 
-                {
-                    "id": 4,
-                    "name": "Show the final result",
-                    "value": false
-                },
+            //     {
+            //         "id": 4,
+            //         "name": "Show the final result",
+            //         "value": false
+            //     },
 
 
-            ]
+            // ]
         }
     }
 
@@ -62,7 +63,7 @@ export default class home extends React.Component {
             screen: ''
         }, () => {
             console.log("here"+this.state.screen)
-            for (const iterator of this.state.currentProcessStatus) {
+            for (const iterator of this.props.stepToDo) {
                 switch (id) {
                     case 1:
                         return this.setState({ screen: "DetectIDScreen" },()=>{
@@ -102,8 +103,9 @@ export default class home extends React.Component {
                                     rotate: -190
                                 }]
                             }}
+                            duration={4000}
                             size={120}
-                            width={6}
+                            width={8}
                             fill={this.state.progress}
                             tintColor="#00e0ff"
                             onAnimationComplete={() => console.log('onAnimationComplete')}
@@ -119,7 +121,7 @@ export default class home extends React.Component {
                         </View>
                         <View style={styles.checkBoxSwagger}>
                             {
-                                this.state.currentProcessStatus.map(item =>
+                                this.props.stepToDo.map(item =>
                                     <View style={styles.checkBox}>
                                         <CheckBox
                                             title={item.name}
@@ -159,6 +161,14 @@ export default class home extends React.Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        stepToDo : state.step
+    }
+}
+
+export default connect(mapStateToProps,null)(Fraud);
 
 const styles = StyleSheet.create({
     container: {
