@@ -16,6 +16,11 @@ export default class Form_Screen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      // cardID: "",
+      // name: "",
+      // birthDay: "",
+      // homeTown: "",
+      // locale: "",
       cardID: "364152355",
       name: "VONGUYENGIAHAN",
       birthDay: "30122000",
@@ -67,7 +72,6 @@ export default class Form_Screen extends React.Component {
   getLocale = (id) => {
     let districtList = this.state.district
     var newDistrict = districtList[id]
-    console.log(newDistrict)
     newDistrict = this.xoa_dau(newDistrict).replace(/ /gi, '')
     this.setState({
       locale: newDistrict
@@ -129,18 +133,18 @@ export default class Form_Screen extends React.Component {
     })
   }
   handleSubmit = () => {
-    // var resultFromCardID = this.props.imageData
+    var resultFromCardID = this.props.imageData
     var onlyForTest = ["CONGHOAXAHOICHUNGHIAVIETNAM", "DoclapTudoHanhphuc", "GIAYCHUNGMINHNHANDAN", "VIETNAM", "So364152355", "HotenVONGUYENGIAHAN", "Sinhngay", "30122000", "NguyenquanTPHoChiMinh", "NoiDKHKthuongtru430NguyenKiem", "Phuong3quanPhuNhuan"];
     var resultFromCardID = onlyForTest.map(item => item.replace(/So|Hoten|SO|Sinhngay|/g, ""))
     for (var i = 0; i <= resultFromCardID.length; i++) {
-      console.log(resultFromCardID[i]);
+
       if (resultFromCardID[i] == "") {
         resultFromCardID.splice(i, 1);
       }
     }
-    console.log(resultFromCardID);
+
     var spliceArray = [...resultFromCardID]
-    //var spliceArray = [...this.props.imageData]
+    // var spliceArray = [...this.props.imageData]
     //compare cardID
     var hasValidID = false
     for (var i = 0; i <= resultFromCardID.length; i++) {
@@ -169,15 +173,12 @@ export default class Form_Screen extends React.Component {
     //compare name
     var hasValidName = false
     for (var i = 0; i <= resultFromCardID.length; i++) {
-      console.log("---here---")
-      console.log(resultFromCardID[i])
-      console.log(this.state.name)
+
       if (this.state.name.toUpperCase() == resultFromCardID[i]) {
         hasValidName = true
         spliceArray.splice(i, 1);
       }
     }
-    console.log(spliceArray)
     if (hasValidName == false) {
       if (this.state.name == "") {
         this.setState({
@@ -252,11 +253,11 @@ export default class Form_Screen extends React.Component {
     var hasValidLocale = false
     console.log(this.state.locale)
     for (var i = 0; i <= spliceArray.length; i++) {
-      if (this.confirmEnding(spliceArray[i], this.state.locale.replace(/Quan|Huyen|Xa|ThanhPho/g, ""))){
-        hasValidLocale=true;
+      if (this.confirmEnding(spliceArray[i], this.state.locale.replace(/Quan|Huyen|Xa|ThanhPho/g, ""))) {
+        hasValidLocale = true;
         break;
       }
-      
+
     }
     if (this.state.locale == "") {
       this.setState({
@@ -285,8 +286,6 @@ export default class Form_Screen extends React.Component {
 
 
   confirmEnding(string, target) {
-    console.log("string" + string)
-    console.log(target)
     let regex = new RegExp(target)
     return regex.test(string)
   };
@@ -479,163 +478,164 @@ export default class Form_Screen extends React.Component {
                 </View>
                 <Text style={{ color: 'red', fontSize: 15, marginLeft: 10 }}>{this.state.errorHomeTown}</Text>
               </View>
-              <View style={styles.localeSwagger}>
-                <View style={{ marginTop: 38 }}>
-                  <Text style={styles.label}>Locale</Text>
-                  <View style={styles.locale}>
-                    <View style={
-                      {
-                        backgroundColor: '#BCE6D8',
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        padding: 10,
-                        marginLeft: 2.5,
-                        borderRadius: 100
-                      }
-                    }>
-                      <Icon
-                        name='map-marker'
-                        size={30}
-                        color='#46C188'
-                      />
-                    </View>
-
-                    <ModalDropdown
-                      style={{
-                        position: 'relative',
-                        width: '70%',
-                        height: 56,
-                        justifyContent: 'center',
-                      }}
-                      textStyle={{
-                        fontWeight: 'bold',
-                        paddingLeft: 10,
-                        fontSize: 15,
-                        opacity: 0.4
-                      }}
-                      options={this.state.province}
-                      defaultValue="Province"
-                      onSelect={id => this.getLocaleDistrict(id)}
-                      dropdownStyle={{
-                        width: "30%"
-                      }}
-                      dropdownTextStyle={
-                        {
-                          fontSize: 17,
-                          textAlign: 'center'
-                        }
-                      }
-                      accessible
+              <Text style={styles.label}>Locale</Text>
+              <View style={[styles.localeSwagger]}>
+                <View style={styles.locale}>
+                  <View style={
+                    {
+                      backgroundColor: '#BCE6D8',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 10,
+                      marginLeft: 2.5,
+                      borderRadius: 100
+                    }
+                  }>
+                    <Icon
+                      name='map-marker'
+                      size={30}
+                      color='#46C188'
                     />
+                  </View>
 
-                    <View style={
+                  <ModalDropdown
+                    style={{
+                      position: 'relative',
+                      width: '60%',
+                      height: 56,
+                      justifyContent: 'center',
+
+                    }}
+                    textStyle={{
+                      fontWeight: 'bold',
+                      paddingLeft: 10,
+                      fontSize: 15,
+                      opacity: 0.4
+                    }}
+                    options={this.state.province}
+                    defaultValue="Province"
+                    onSelect={id => this.getLocaleDistrict(id)}
+                    dropdownStyle={{
+                      width: "30%",
+                    }}
+                    dropdownTextStyle={
                       {
-                        zIndex: -1,
-                        left: '50%',
-                        transform: [
-                          {
-                            translateX: 50,
-                          }
-
-                        ],
-                        position: 'absolute',
-                        borderWidth: 0.4,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        padding: 5,
-                        borderRadius: 100,
-
+                        fontSize: 17,
+                        textAlign: 'center'
                       }
-                    }>
-                      <Icon
-                        name='chevron-down'
-                        size={20}
-                        color='black'
-                      />
-                    </View>
+                    }
+                    accessible
+                  />
+
+                  <View style={
+                    {
+                      zIndex: -1,
+                      left: '50%',
+                      transform: [
+                        {
+                          translateX: 40,
+                        }
+
+                      ],
+                      position: 'absolute',
+                      borderWidth: 0.4,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 5,
+                      borderRadius: 100,
+
+                    }
+                  }>
+                    <Icon
+                      name='chevron-down'
+                      size={20}
+                      color='black'
+                    />
                   </View>
                 </View>
 
-                <View style={{ marginTop: 38 }}>
-                  <View style={[styles.locale, { marginTop: 30 }]}>
-                    <View style={
-                      {
-                        backgroundColor: '#BCE6D8',
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        padding: 10,
-                        marginLeft: 2.5,
-                        borderRadius: 100
-                      }
-                    }>
-                      <Icon
-                        name='map-marker'
-                        size={30}
-                        color='#46C188'
-                      />
-                    </View>
 
-                    <ModalDropdown
-                      style={{
 
-                        position: 'relative',
-                        width: '70%',
-                        height: 56,
-                        justifyContent: 'center',
-                      }}
-                      textStyle={{
-                        fontWeight: 'bold',
-                        paddingLeft: 10,
-                        fontSize: 15,
-                        opacity: 0.4
-                      }}
-                      options={this.state.district}
-                      defaultValue="Distric"
-                      onSelect={id => this.getLocale(id)}
-                      dropdownStyle={{
-                        width: "30%"
-                      }}
-                      dropdownTextStyle={
-                        {
-                          fontSize: 17,
-                          textAlign: 'center'
-                        }
-                      }
-                      accessible
+                <View style={[styles.locale]}>
+                  <View style={
+                    {
+                      backgroundColor: '#BCE6D8',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 10,
+                      marginLeft: 2.5,
+                      borderRadius: 100
+                    }
+                  }>
+                    <Icon
+                      name='map-marker'
+                      size={30}
+                      color='#46C188'
                     />
+                  </View>
 
-                    <View style={
+                  <ModalDropdown
+                    style={{
+
+                      position: 'relative',
+                      width: '60%',
+                      height: 56,
+                      justifyContent: 'center',
+                    }}
+                    textStyle={{
+                      fontWeight: 'bold',
+                      paddingLeft: 10,
+                      fontSize: 15,
+                      opacity: 0.4
+                    }}
+                    options={this.state.district}
+                    defaultValue="Distric"
+                    onSelect={id => this.getLocale(id)}
+                    dropdownStyle={{
+                      width: "30%"
+                    }}
+                    dropdownTextStyle={
                       {
-                        zIndex: -1,
-                        left: '50%',
-                        transform: [
-                          {
-                            translateX: 50,
-                          }
-
-                        ],
-                        position: 'absolute',
-                        borderWidth: 0.4,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        padding: 5,
-                        borderRadius: 100,
-
+                        fontSize: 17,
+                        textAlign: 'center'
                       }
-                    }>
-                      <Icon
-                        name='chevron-down'
-                        size={20}
-                        color='black'
-                      />
-                    </View>
+                    }
+                    accessible
+                  />
+
+                  <View style={
+                    {
+                      zIndex: -1,
+                      left: '50%',
+                      transform: [
+                        {
+                          translateX: 40,
+                        }
+
+                      ],
+                      position: 'absolute',
+                      borderWidth: 0.4,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: 5,
+                      borderRadius: 100,
+
+                    }
+                  }>
+                    <Icon
+                      name='chevron-down'
+                      size={20}
+                      color='black'
+                    />
                   </View>
                 </View>
               </View>
               <Text style={{ color: 'red', marginLeft: 20 }}>{this.state.errorLocale}</Text>
               <TouchableOpacity style={styles.buttonStyle}
-                onPress={() => {
+                onPress={async () => {
+                  var a = await this.handleSubmit();
                   if (this.handleSubmit() == false) {
+                    console.log('run here n time')
                     return this.props.onPress()
                   }
                 }}
@@ -747,7 +747,7 @@ const styles = StyleSheet.create({
   },
 
   locale: {
-    width: 180,
+    width:"45%",
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,

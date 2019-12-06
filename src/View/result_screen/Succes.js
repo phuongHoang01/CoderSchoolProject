@@ -42,7 +42,6 @@ class Result extends React.Component {
                 return this.props.onPress();
             case "Form":
                 this.props.doneOCR();
-                console.log(this.props.listToDo);
                 return this.props.onPress()
             case "faceRecognize":
                 this.props.doneFace();
@@ -51,12 +50,28 @@ class Result extends React.Component {
         }
     }
 
+    getImage = (aaa) => {
+        switch (this.props.currentScreen) {
+            case "DetectIDScreen":
+                return require("../../assets/Animation/succes.json")
+            case "Form":
+                return require("../../assets/Animation/normalSucces.json")
+            case "faceRecognize":
+                return require("../../assets/Animation/succes.json")
+            default:
+                break;
+        }
+    }
+
 
     render() {
+        console.log("render")
+        console.log(this.props.src)
+        //const a = require(this.props.src)
         return (
             <View style={styles.container}>
                 <LottieView style={{ width: "80%", height: 300, alignSelf: 'center', }}
-                    source={require('../../assets/Animation/succes.json')}
+                    source={this.getImage()}
                     progress={this.state.success}
                 />
                 <View style={

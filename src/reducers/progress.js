@@ -1,0 +1,1 @@
+const initialState = 0;

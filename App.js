@@ -36,7 +36,7 @@ import myReducer from './src/reducers/index'
 import { Provider } from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from './src/NavigationService/service'
-
+import FaceWaitingScreen from './src/View/waiting_screen/FaceScreen'
 
 
 class HomeScreen extends React.Component {
@@ -56,7 +56,8 @@ class HomeScreen extends React.Component {
 class ListToDoScreen extends React.Component {
   static navigationOptions = {
     headerStyle: {
-      elevation: 0
+      elevation: 0,
+     
     },
   };
 
@@ -77,7 +78,7 @@ class ListToDoScreen extends React.Component {
             currentScreen: Screen,
             userInfo: this.props.navigation.getParam('userInfo')
           })
-        }
+       }
         else {
           alert("Vui long hoàn thành theo các bước")
           break;
@@ -308,7 +309,7 @@ class TemplateResultScreen extends React.Component {
       }
     }, {
       headers: {
-        "Authorization": "Bearer ya29.Il-zB-ME7R_JBwwjRaVLxD3InsNbE-5SJDVCzBNGWxzJp-9t-ftGW1p0_gW8ljYyS4wNX6K2jn9ILy49_wcYEPFAjk21tQUAJ2w4NEGcDpSimFgb82S6ufAesSQZFM2Pcg"
+        "Authorization": "Bearer ya29.Il-zB1-If1y-GUy23BTw_K5-D_zRiOcO_GqUWt09itqSruTNu3yULElj5ncxKeWypoLL-GT9rgGwd2Ns4vzJCFKshcvy6IXbKtpNyB2E0TJPcgDhzwZi4pVDqOxKQHG2PA"
       }
     })
       .then(async (response) => {
@@ -322,7 +323,7 @@ class TemplateResultScreen extends React.Component {
 
   pictureFormCMND = () => {
     console.log("first run")
-    const URL_PIC = this.props.navigation.getParam('urlData')
+    const URL_PIC = "https://viknews.com/vi/wp-content/uploads/2019/04/lam-lai-cmnd5.jpg" //this.props.navigation.getParam('urlData')
     const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
     axios.post(URL,
       {
@@ -352,6 +353,7 @@ class TemplateResultScreen extends React.Component {
         faceInfo: result
       }, () => {
         this.sendPicToProcess();
+        //this.templateProcessing();
       })
     }
     else {
@@ -367,7 +369,7 @@ class TemplateResultScreen extends React.Component {
 
   // API này sẽ gửi hình lên backend để xử lý bbhv
   sendPicToProcess = async (url) => {
-    const URL_PIC = this.props.navigation.getParam('urlData') //url của tấm hình để xử lý
+    const URL_PIC = "https://viknews.com/vi/wp-content/uploads/2019/04/lam-lai-cmnd5.jpg"// this.props.navigation.getParam('urlData')
     const URL = "https://checkocr72.cognitiveservices.azure.com/vision/v2.0/read/core/asyncBatchAnalyze" //url của api
     axios.post(URL, {
       "url": URL_PIC
@@ -418,6 +420,7 @@ class TemplateResultScreen extends React.Component {
     if (this.state.alertError != "") {
       return (
         <Fail
+          currentScreen={this.props.navigation.state.routeName}
           nofication={this.state.alertError}
           decription="We can't auto recognized National ID base on original template  "
         // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
@@ -549,7 +552,10 @@ class FaceRecognize extends React.Component {
       })
       .then(response => {
         console.log(response.data.data.link);
-        this.props.navigation.navigate('faceProcessing', { faceUrl: response.data.data.link,faceInfo:this.props.navigation.getParam('faceInfo')});
+        this.props.navigation.navigate('faceProcessing', { faceUrl: response.data.data.link,
+          faceInfo:this.props.navigation.getParam('faceInfo'),
+          currentScreen:this.props.navigation.getParam('currentScreen')
+        });
       })
       .catch(function (error) {
         console.log(error);
@@ -587,7 +593,7 @@ class FaceResultScreen extends React.Component {
 
   pictureFormSelfie = () => {
     console.log("first run")
-    const URL_PIC = "https://vnn-imgs-f.vgcloud.vn/2019/11/16/10/ngoc-trinh-len-tieng-benh-vuc-khi-cong-phuong-bi-che-da-do-1.jpg"//this.props.navigation.getParam('faceUrl')
+    const URL_PIC = "https://scontent-sin2-2.xx.fbcdn.net/v/t1.15752-9/78735519_586751392100069_3898633172828553216_n.jpg?_nc_cat=108&_nc_ohc=Bek7E3RM9YsAQkU2SLEU6c9EZIKGXyNRqTX6_OO9VQgvY8leE1QLofQNg&_nc_ht=scontent-sin2-2.xx&oh=ea0d1451945709bff5b3d652d559671d&oe=5E7E5434"//this.props.navigation.getParam('faceUrl')
     const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
     axios.post(URL,
       {
@@ -640,6 +646,7 @@ class FaceResultScreen extends React.Component {
 
       })
       .then( async (response) =>{
+        console.log(response);
         this.faceVerify(response.data);
       })
       .catch(function (error) {
@@ -648,7 +655,7 @@ class FaceResultScreen extends React.Component {
   }
 
   faceVerify(result) {
-    if(result.isIdentical == true && result.confidence >=0.6){
+    if(result.isIdentical == true && result.confidence >=0.5){
       this.setState({
         alertError:''
       })
@@ -657,9 +664,10 @@ class FaceResultScreen extends React.Component {
       this.setState({
         alertError:'Please take another selfie'
       },()=>{
-        this.setState({
+        setTimeout(()=>this.setState({
           isLoading:false
-        })
+        }),3000)
+        
       })
     }
   }
@@ -668,6 +676,7 @@ class FaceResultScreen extends React.Component {
     if (this.state.alertError != "") {
       return (
         <Fail
+          currentScreen={this.props.navigation.getParam('currentScreen')}
           nofication={this.state.alertError}
           decription="We can't auto recognized National ID base on original template  "
         >
@@ -690,7 +699,7 @@ class FaceResultScreen extends React.Component {
 
   whenLoading() {
     return (
-      <WaitingScreen nofication="Processing ..."
+      <FaceWaitingScreen nofication="Processing ..."
         decription="We have auto recognized National ID base on original template  "
       />
     )

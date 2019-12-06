@@ -12,13 +12,14 @@ import {
     TouchableOpacity
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { createAppContainer, NavigationActions } from 'react-navigation';
+import { createAppContainer, NavigationActions, NavigationEvents } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+
 import { IconToggle } from 'react-native-material-ui/src/'
 import { CheckBox } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Entypo'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 
 const { width, height } = Dimensions.get('window')
@@ -26,55 +27,58 @@ class Fraud extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            progress: this.props.currentStatus,
+            progress: 50,
             screen: "",
-            // currentProcessStatus: [
-            //     {
-            //         "id": 1,
-            //         "name": "Detect National ID template from photo",
-            //         "value": true
-            //     },
+            currentProcessStatus: [
+                {
+                    "id": 1,
+                    "name": "Detect National ID template from photo",
+                    "value": true
+                },
 
-            //     {
-            //         "id": 2,
-            //         "name": "Filling form and compare with the result from Nation ID OCR result ",
-            //         "value": true
-            //     },
+                {
+                    "id": 2,
+                    "name": "Filling form and compare with the result from Nation ID OCR result ",
+                    "value": true
+                },
 
-            //     {
-            //         "id": 3,
-            //         "name": "Capture face from camera and compare with the face from Nation ID card",
-            //         "value": false
-            //     },
+                {
+                    "id": 3,
+                    "name": "Capture face from camera and compare with the face from Nation ID card",
+                    "value": false
+                },
 
-            //     {
-            //         "id": 4,
-            //         "name": "Show the final result",
-            //         "value": false
-            //     },
+                {
+                    "id": 4,
+                    "name": "Show the final result",
+                    "value": false
+                },
 
 
-            // ]
+            ]
         }
+    }
+    componentDidMount() {
+
     }
 
     onPressSwitchScreen(id) {
         this.setState({
             screen: ''
         }, () => {
-            console.log("here"+this.state.screen)
+            console.log("here" + this.state.screen)
             for (const iterator of this.props.stepToDo) {
                 switch (id) {
                     case 1:
-                        return this.setState({ screen: "DetectIDScreen" },()=>{
+                        return this.setState({ screen: "DetectIDScreen" }, () => {
                             this.props.onPress(this.state.screen)
                         })
                     case 2:
-                        return this.setState({ screen: "Form" },()=>{
+                        return this.setState({ screen: "Form" }, () => {
                             this.props.onPress(this.state.screen)
                         })
                     case 3:
-                        return this.setState({ screen: "faceRecognize" },()=>{
+                        return this.setState({ screen: "faceRecognize" }, () => {
                             this.props.onPress(this.state.screen)
                         })
                 }
@@ -87,7 +91,6 @@ class Fraud extends React.Component {
     render() {
         console.log(this.state.screen)
         return (
-
             <ImageBackground resizeMode='stretch' style={styles.container} source={require('./assets/home.png')}>
                 <View style={styles.header}>
                     <View style={styles.progress}>
@@ -115,10 +118,18 @@ class Fraud extends React.Component {
                 </View>
                 <View style={styles.body}>
                     <View style={styles.bodySwagger}>
+                        <NavigationEvents
+                            onWillFocus={() => {
+                                return this.setState({
+                                    currentProcessStatus:this.props.stepToDo
+                                })
+                            }}
+                        />
                         <View style={{ alignItems: 'center', marginTop: 0 }}>
                             <Text style={{ fontSize: 18, color: '#f0faf6' }}>{this.state.progress}% complete</Text>
                             <Text style={styles.title}>Fraud Detection</Text>
                         </View>
+
                         <View style={styles.checkBoxSwagger}>
                             {
                                 this.props.stepToDo.map(item =>
@@ -164,11 +175,11 @@ class Fraud extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        stepToDo : state.step
+        stepToDo: state.step
     }
 }
 
-export default connect(mapStateToProps,null)(Fraud);
+export default connect(mapStateToProps, null)(Fraud);
 
 const styles = StyleSheet.create({
     container: {
@@ -181,7 +192,7 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        flex: 0.5,
+        flex: 0.8,
         width,
         height,
     },

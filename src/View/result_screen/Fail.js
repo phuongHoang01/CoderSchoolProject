@@ -32,12 +32,25 @@ export default class Result extends React.Component {
         }).start();
     }
 
+    getImage = () => {
+        console.log("getImage")
+        console.log(this.props.currentScreen)
+        switch (this.props.currentScreen) {
+            case "DetectIDScreen":
+                return require("../../assets/Animation/fail.json")
+            case "faceRecognize":
+                return require("../../assets/Animation/faceFail.json")
+            default:
+                break;
+        }
+    }
+
 
     render() {
         return (
             <View style={styles.container}>
                 <LottieView style={{ width: "80%", height: 300, alignSelf: 'center', }}
-                    source={require('../../assets/Animation/fail.json')}
+                    source={this.getImage()}
                     progress={this.state.success}
                      />
                 <View style={
