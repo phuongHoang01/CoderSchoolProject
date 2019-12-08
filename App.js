@@ -37,7 +37,7 @@ import { Provider } from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from './src/NavigationService/service'
 import FaceWaitingScreen from './src/View/waiting_screen/FaceScreen'
-import {YellowBox} from 'react-native';
+import { YellowBox } from 'react-native';
 
 
 class HomeScreen extends React.Component {
@@ -58,7 +58,7 @@ class ListToDoScreen extends React.Component {
   static navigationOptions = {
     headerStyle: {
       elevation: 0,
-     
+
     },
   };
 
@@ -79,7 +79,7 @@ class ListToDoScreen extends React.Component {
             currentScreen: Screen,
             userInfo: this.props.navigation.getParam('userInfo')
           })
-       }
+        }
         else {
           alert("Vui long hoàn thành theo các bước")
           break;
@@ -87,11 +87,11 @@ class ListToDoScreen extends React.Component {
       }
 
       case "faceRecognize": {
-        if(this.props.navigation.getParam('faceInfo') != null){
-        return this.props.navigation.navigate(Screen, {
-          currentScreen: Screen,
-          faceInfo: this.props.navigation.getParam('faceInfo')
-        })
+        if (this.props.navigation.getParam('faceInfo') != null) {
+          return this.props.navigation.navigate(Screen, {
+            currentScreen: Screen,
+            faceInfo: this.props.navigation.getParam('faceInfo')
+          })
         }
         else {
           alert("Vui long hoàn thành theo các bước")
@@ -310,7 +310,7 @@ class TemplateResultScreen extends React.Component {
       }
     }, {
       headers: {
-        "Authorization": "Bearer ya29.Il-0B-EzM5B311v23HFq85WPLlhXyz5Zel_fpN85tr2SvZqBvOVKVX59LOqqG79EMfoAPWoHsDyUVtThmxLLH1MIfLg0noSLUO46n9cZWGJMcsctpZzT2FJbpqLjAYaP7g"
+        "Authorization": "Bearer ya29.Il-0B5CZSnNE6cFlh2a4wotTpDQSGCM1CDkqDFQd701tf4SarMwD-fCWH4J-wm4VfQVl9E6dy6lx5L9n2PaqZQzVM6CZQ7fwi2E9R-AUMoUjmHSxBJvrfqXaWILtzSvpUQ"
       }
     })
       .then(async (response) => {
@@ -324,7 +324,7 @@ class TemplateResultScreen extends React.Component {
 
   pictureFormCMND = () => {
     console.log("first run")
-    const URL_PIC =  this.props.navigation.getParam('urlData')
+    const URL_PIC = this.props.navigation.getParam('urlData')
     const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
     axios.post(URL,
       {
@@ -363,6 +363,7 @@ class TemplateResultScreen extends React.Component {
       }, () => {
         this.setState({ isLoading: false })
       })
+      return
     }
   }
 
@@ -412,7 +413,7 @@ class TemplateResultScreen extends React.Component {
   whenLoading() {
     return (
       <WaitingScreen nofication="Processing ..."
-        decription="We have auto recognized National ID base on original template  "
+        decription="We have compared your National ID's information with your input  "
       />
     )
   }
@@ -423,7 +424,7 @@ class TemplateResultScreen extends React.Component {
         <Fail
           currentScreen={this.props.navigation.state.routeName}
           nofication={this.state.alertError}
-          decription="We can't auto recognized National ID base on original template  "
+          decription="We can't compare your National ID's information with your input  "
         // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
         >
         </Fail>
@@ -434,7 +435,7 @@ class TemplateResultScreen extends React.Component {
         <Succes
           currentScreen={this.props.navigation.getParam('currentScreen')}
           nofication="Great!, National ID's already."
-          decription="We have auto recognized National ID base on original template "
+          decription="We have compared your National ID's information with your input  "
           onPress={() => this.props.navigation.navigate('ListToDoScreen', { userInfo: this.state.result, faceInfo: this.state.faceInfo })}
         // onPressWhenHaveError={()=>this.props.navigation.navigate('Home')}
         >
@@ -515,7 +516,7 @@ class FormScreen extends React.Component {
     },
   };
 
-  componentDidMount(){
+  componentDidMount() {
     console.log(this.props.navigation.getParam('userInfo'))
   }
 
@@ -557,9 +558,10 @@ class FaceRecognize extends React.Component {
       })
       .then(response => {
         console.log(response.data.data.link);
-        this.props.navigation.navigate('faceProcessing', { faceUrl: response.data.data.link,
-          faceInfo:this.props.navigation.getParam('faceInfo'),
-          currentScreen:this.props.navigation.getParam('currentScreen')
+        this.props.navigation.navigate('faceProcessing', {
+          faceUrl: response.data.data.link,
+          faceInfo: this.props.navigation.getParam('faceInfo'),
+          currentScreen: this.props.navigation.getParam('currentScreen')
         });
       })
       .catch(function (error) {
@@ -592,7 +594,7 @@ class FaceResultScreen extends React.Component {
     },
   };
 
-  componentDidMount(){
+  componentDidMount() {
     this.pictureFormSelfie();
   }
 
@@ -650,7 +652,7 @@ class FaceResultScreen extends React.Component {
         },
 
       })
-      .then( async (response) =>{
+      .then(async (response) => {
         console.log(response);
         this.faceVerify(response.data);
       })
@@ -660,19 +662,24 @@ class FaceResultScreen extends React.Component {
   }
 
   faceVerify(result) {
-    if(result.isIdentical == true || result.confidence >=0.4){
+    if (result.isIdentical == true || result.confidence >= 0.4) {
       this.setState({
-        alertError:''
-      })
+        alertError: ''
+      }), () => {
+        this.setState({
+          isLoading: false
+        })
+      }
+      return
     }
     else {
       this.setState({
-        alertError:'Please take another selfie'
-      },()=>{
-        setTimeout(()=>this.setState({
-          isLoading:false
-        }),3000)
-        
+        alertError: 'Please take another selfie'
+      }, () => {
+        setTimeout(() => this.setState({
+          isLoading: false
+        }), 3000)
+
       })
     }
   }
@@ -683,7 +690,7 @@ class FaceResultScreen extends React.Component {
         <Fail
           currentScreen={this.props.navigation.getParam('currentScreen')}
           nofication={this.state.alertError}
-          decription="We can't auto recognized National ID base on original template  "
+          decription="We can't auto recognized your face "
         >
         </Fail>
       )
@@ -693,7 +700,7 @@ class FaceResultScreen extends React.Component {
         <Succes
           currentScreen={this.props.navigation.getParam('currentScreen')}
           nofication="Great!, National ID's already."
-          decription="We have auto recognized National ID base on original template "
+          decription="We have auto recognized your face base on your selfie image"
           onPress={() => this.props.navigation.navigate('ListToDoScreen')}
         >
         </Succes>
@@ -705,18 +712,18 @@ class FaceResultScreen extends React.Component {
   whenLoading() {
     return (
       <FaceWaitingScreen nofication="Processing ..."
-        decription="We have auto recognized National ID base on original template  "
+        decription="We have auto recognized your face base on your selfie image "
       />
     )
   }
 
-whenDone() {
+  whenDone() {
     console.log("run here" + this.state.alertError)
     return this.checkError();
   }
   //Kiểm tra processing nếu xong rồi thì trả ra kết quả
   checkResult() {
-   // this.thisFunctionOnlyForTest()
+    // this.thisFunctionOnlyForTest()
     if (this.state.isLoading == true) {
       return this.whenLoading();
     }

@@ -33,9 +33,7 @@ export default class home extends React.Component {
                 </View>
                 <View style={styles.body}>
                     <View style={styles.swaggerChild}>
-                        <Text style={styles.title}>Developer Circles Vietnam</Text>
-                        <Text style={styles.title}>Innovation Chanllenge</Text>
-
+                        <Text style={styles.title}>Developer Circles Vietnam Innovation Chanllenge</Text>
                         <View style={styles.featureSwagger}>
                             <ScrollView>
                             <TouchableOpacity style={styles.feature}
@@ -127,7 +125,8 @@ const styles = StyleSheet.create({
         color: '#f0faf6',
         fontSize: 25,
         fontWeight: '700',
-        lineHeight: 35
+        lineHeight: 35,
+        textAlign: 'center'
     },
 
     swaggerChild: {

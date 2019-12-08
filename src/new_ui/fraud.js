@@ -91,83 +91,88 @@ class Fraud extends React.Component {
     render() {
         console.log(this.state.screen)
         return (
-            <ImageBackground resizeMode='stretch' style={styles.container} source={require('./assets/home.png')}>
-                <View style={styles.header}>
-                    <View style={styles.progress}>
-                        <Image
-                            style={{ width: "100%", height: "100%" }}
-                            source={require("./assets/scan02.png")}
-                            resizeMode="contain"
-                        />
+            <ScrollView>
 
-                        <AnimatedCircularProgress
-                            style={{
-                                position: 'absolute', transform: [{
-                                    rotate: -190
-                                }]
-                            }}
-                            duration={4000}
-                            size={120}
-                            width={8}
-                            fill={this.state.progress}
-                            tintColor="#00e0ff"
-                            onAnimationComplete={() => console.log('onAnimationComplete')}
-                            backgroundColor="#3d5875" />
+                <ImageBackground resizeMode='stretch' style={styles.container} source={require('./assets/home.png')}>
 
-                    </View>
-                </View>
-                <View style={styles.body}>
-                    <View style={styles.bodySwagger}>
-                        <NavigationEvents
-                            onWillFocus={() => {
-                                return this.setState({
-                                    currentProcessStatus:this.props.stepToDo
-                                })
-                            }}
-                        />
-                        <View style={{ alignItems: 'center', marginTop: 0 }}>
-                            <Text style={{ fontSize: 18, color: '#f0faf6' }}>{this.state.progress}% complete</Text>
-                            <Text style={styles.title}>Fraud Detection</Text>
+                    <View style={styles.header}>
+                        <View style={styles.progress}>
+                            <Image
+                                style={{ width: "100%", height: "100%" }}
+                                source={require("./assets/scan02.png")}
+                                resizeMode="contain"
+                            />
+
+                            <AnimatedCircularProgress
+                                style={{
+                                    position: 'absolute', transform: [{
+                                        rotate: -190
+                                    }]
+                                }}
+                                duration={4000}
+                                size={120}
+                                width={8}
+                                fill={this.state.progress}
+                                tintColor="#4EF4C6"
+                                onAnimationComplete={() => console.log('onAnimationComplete')}
+                                backgroundColor="transparent" />
+
                         </View>
+                    </View>
+                    <View style={styles.body}>
+                        <View style={styles.bodySwagger}>
+                            <NavigationEvents
+                                onWillFocus={() => {
+                                    return this.setState({
+                                        currentProcessStatus: this.props.stepToDo
+                                    })
+                                }}
+                            />
+                            <View style={{ alignItems: 'center', marginTop: 0 }}>
+                                <Text style={{ fontSize: 18, color: '#f0faf6' }}>{this.state.progress}% complete</Text>
+                                <Text style={styles.title}>Fraud Detection</Text>
+                            </View>
 
-                        <View style={styles.checkBoxSwagger}>
-                            {
-                                this.props.stepToDo.map(item =>
-                                    <View style={styles.checkBox}>
-                                        <CheckBox
-                                            title={item.name}
-                                            textStyle={
-                                                {
-                                                    color: "white",
-                                                    fontSize: 17
+                            <View style={styles.checkBoxSwagger}>
+                                {
+                                    this.props.stepToDo.map(item =>
+                                        <View style={styles.checkBox}>
+                                            <CheckBox
+                                                title={item.name}
+                                                textStyle={
+                                                    {
+                                                        color: "white",
+                                                        fontSize: 17
+                                                    }
                                                 }
-                                            }
-                                            leftIconContainerStyle={{ color: "#A2DFC3", backgroundColor: 'blue' }}
-                                            checked={item.value}
-                                            iconType='Ionicons'
-                                            checkedIcon='check-circle'
-                                            uncheckedIcon='radio-button-unchecked'
-                                            containerStyle={{
-                                                backgroundColor: "#3bbd81",
-                                                borderWidth: 0,
-                                                width: "90%"
-                                            }}
-                                            onPress={() => this.onPressSwitchScreen(item.id)}
-                                        />
+                                                leftIconContainerStyle={{ color: "white", backgroundColor: 'white' }}
+                                                checked={item.value}
+                                                iconType='Ionicons'
+                                                checkedIcon='check-circle'
+                                                uncheckedIcon='radio-button-unchecked'
+                                                containerStyle={{
+                                                    backgroundColor: "transparent",
+                                                    borderWidth: 0,
+                                                    width: "90%"
+                                                }}
+                                                onPress={() => this.onPressSwitchScreen(item.id)}
+                                            />
 
-                                        <IconToggle style={{ width: "10%" }} name="chevron-right" size={30} color="#98B6DA" />
-                                    </View>
-                                )
-                            }
+                                            <IconToggle style={{ width: "10%" }} name="chevron-right" size={30} color="#F2F2F2" />
+                                        </View>
+                                    )
+                                }
+                            </View>
+
+                            <TouchableOpacity style={styles.buttonStyle}
+                                onPress={this.props.onPressButton}>
+                                <Text style={styles.buttonText}>Start</Text>
+                            </TouchableOpacity>
                         </View>
 
-                        <TouchableOpacity style={styles.buttonStyle}
-                            onPress={this.props.onPressButton}>
-                            <Text style={styles.buttonText}>Start</Text>
-                        </TouchableOpacity>
                     </View>
-                </View>
-            </ImageBackground>
+                </ImageBackground>
+            </ScrollView>
 
         )
     }
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
 
     progress: {
         width: 120, height: 120,
-        backgroundColor: "#f0f6e8",
+        backgroundColor: "#F0F6E8",
         left: "50%",
         borderRadius: 100,
         transform: [
@@ -221,7 +226,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         borderWidth: 10,
         borderRadius: 100,
-        borderColor: 'grey'
+        borderColor: '#4EF4C6',
     },
 
     title: {

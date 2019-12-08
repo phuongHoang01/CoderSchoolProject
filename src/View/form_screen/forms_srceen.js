@@ -54,8 +54,9 @@ export default class Form_Screen extends React.Component {
     })
   }
   getBirthDay(text) {
+    var str = text.replace(/[^0-9a-z\s]/gi, '')
     this.setState({
-      birthDay: text
+      birthDay: str
     })
   }
   getHomeTown(id) {
@@ -134,8 +135,8 @@ export default class Form_Screen extends React.Component {
   }
   handleSubmit = () => {
     var resultFromCardID = this.props.imageData
-   // var onlyForTest = ["CONGHOAXAHOICHUNGHIAVIETNAM", "DoclapTudoHanhphuc", "GIAYCHUNGMINHNHANDAN", "VIETNAM", "So364152355", "HotenVONGUYENGIAHAN", "Sinhngay", "30122000", "NguyenquanTPHoChiMinh", "NoiDKHKthuongtru430NguyenKiem", "Phuong3quanPhuNhuan"];
-    var resultFromCardID = resultFromCardID.map(item => item.replace(/So|Hoten|SO|Sinhngay|/g, ""))
+    // var onlyForTest = ["CONGHOAXAHOICHUNGHIAVIETNAM", "DoclapTudoHanhphuc", "GIAYCHUNGMINHNHANDAN", "VIETNAM", "So364152355", "HotenVONGUYENGIAHAN", "Sinhngay", "30122000", "NguyenquanTPHoChiMinh", "NoiDKHKthuongtru430NguyenKiem", "Phuong3quanPhuNhuan"];
+    var resultFromCardID = resultFromCardID.map(item => item.replace(/So|so|Hoten|SO|Sinhngay|/g, ""))
     for (var i = 0; i <= resultFromCardID.length; i++) {
 
       if (resultFromCardID[i] == "") {
@@ -397,7 +398,6 @@ export default class Form_Screen extends React.Component {
                     errorStyle={{ color: 'red', fontSize: 15 }}
                     errorMessage={this.state.errorBirthDay}
                     onChangeText={text => this.getBirthDay(text)}
-                    keyboardType="number-pad"
                   />
                 </View>
               </View>
@@ -747,7 +747,7 @@ const styles = StyleSheet.create({
   },
 
   locale: {
-    width:"45%",
+    width: "45%",
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
