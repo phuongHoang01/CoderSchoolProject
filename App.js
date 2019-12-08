@@ -37,6 +37,7 @@ import { Provider } from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from './src/NavigationService/service'
 import FaceWaitingScreen from './src/View/waiting_screen/FaceScreen'
+import {YellowBox} from 'react-native';
 
 
 class HomeScreen extends React.Component {
@@ -309,7 +310,7 @@ class TemplateResultScreen extends React.Component {
       }
     }, {
       headers: {
-        "Authorization": "Bearer ya29.Il-zB1-If1y-GUy23BTw_K5-D_zRiOcO_GqUWt09itqSruTNu3yULElj5ncxKeWypoLL-GT9rgGwd2Ns4vzJCFKshcvy6IXbKtpNyB2E0TJPcgDhzwZi4pVDqOxKQHG2PA"
+        "Authorization": "Bearer ya29.Il-0B-EzM5B311v23HFq85WPLlhXyz5Zel_fpN85tr2SvZqBvOVKVX59LOqqG79EMfoAPWoHsDyUVtThmxLLH1MIfLg0noSLUO46n9cZWGJMcsctpZzT2FJbpqLjAYaP7g"
       }
     })
       .then(async (response) => {
@@ -323,7 +324,7 @@ class TemplateResultScreen extends React.Component {
 
   pictureFormCMND = () => {
     console.log("first run")
-    const URL_PIC = "https://viknews.com/vi/wp-content/uploads/2019/04/lam-lai-cmnd5.jpg" //this.props.navigation.getParam('urlData')
+    const URL_PIC =  this.props.navigation.getParam('urlData')
     const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
     axios.post(URL,
       {
@@ -352,8 +353,8 @@ class TemplateResultScreen extends React.Component {
       this.setState({
         faceInfo: result
       }, () => {
-        this.sendPicToProcess();
-        //this.templateProcessing();
+        //this.sendPicToProcess();
+        this.templateProcessing();
       })
     }
     else {
@@ -369,7 +370,7 @@ class TemplateResultScreen extends React.Component {
 
   // API này sẽ gửi hình lên backend để xử lý bbhv
   sendPicToProcess = async (url) => {
-    const URL_PIC = "https://viknews.com/vi/wp-content/uploads/2019/04/lam-lai-cmnd5.jpg"// this.props.navigation.getParam('urlData')
+    const URL_PIC = this.props.navigation.getParam('urlData')
     const URL = "https://checkocr72.cognitiveservices.azure.com/vision/v2.0/read/core/asyncBatchAnalyze" //url của api
     axios.post(URL, {
       "url": URL_PIC
@@ -400,7 +401,7 @@ class TemplateResultScreen extends React.Component {
           result.push(str2)
         }//Show kết quả xử lý ở trên vào console.log dợi 10s dể show kết quả
         this.setState({ result }, async () => {
-          console.log(this.state.result)
+          console.log(this.state.result);
         })
         //Gửi thông tin qua màn hình waiting khi có thông tin này sẽ hết loading
 
@@ -514,6 +515,10 @@ class FormScreen extends React.Component {
     },
   };
 
+  componentDidMount(){
+    console.log(this.props.navigation.getParam('userInfo'))
+  }
+
   render() {
     return (
       <Form
@@ -593,7 +598,7 @@ class FaceResultScreen extends React.Component {
 
   pictureFormSelfie = () => {
     console.log("first run")
-    const URL_PIC = "https://scontent-sin2-2.xx.fbcdn.net/v/t1.15752-9/78735519_586751392100069_3898633172828553216_n.jpg?_nc_cat=108&_nc_ohc=Bek7E3RM9YsAQkU2SLEU6c9EZIKGXyNRqTX6_OO9VQgvY8leE1QLofQNg&_nc_ht=scontent-sin2-2.xx&oh=ea0d1451945709bff5b3d652d559671d&oe=5E7E5434"//this.props.navigation.getParam('faceUrl')
+    const URL_PIC = this.props.navigation.getParam('faceUrl')//"https://scontent-sin2-2.xx.fbcdn.net/v/t1.15752-9/78735519_586751392100069_3898633172828553216_n.jpg?_nc_cat=108&_nc_ohc=Bek7E3RM9YsAQkU2SLEU6c9EZIKGXyNRqTX6_OO9VQgvY8leE1QLofQNg&_nc_ht=scontent-sin2-2.xx&oh=ea0d1451945709bff5b3d652d559671d&oe=5E7E5434"
     const URL = "https://teamck27.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_01&returnRecognitionModel=false&detectionModel=detection_01"
     axios.post(URL,
       {
@@ -655,7 +660,7 @@ class FaceResultScreen extends React.Component {
   }
 
   faceVerify(result) {
-    if(result.isIdentical == true && result.confidence >=0.5){
+    if(result.isIdentical == true || result.confidence >=0.4){
       this.setState({
         alertError:''
       })
@@ -737,8 +742,7 @@ whenDone() {
 }
 
 
-
-
+YellowBox.ignoreWarnings(['Warning: ReactNative.createElement']);
 
 const styles = StyleSheet.create({
   container: {

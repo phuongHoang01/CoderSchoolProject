@@ -16,16 +16,16 @@ export default class Form_Screen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // cardID: "",
-      // name: "",
-      // birthDay: "",
-      // homeTown: "",
-      // locale: "",
-      cardID: "364152355",
-      name: "VONGUYENGIAHAN",
-      birthDay: "30122000",
-      homeTown: "TPHoChiMinh",
-      locale: "PhuNhuan",
+      cardID: "",
+      name: "",
+      birthDay: "",
+      homeTown: "",
+      locale: "",
+      // cardID: "364152355",
+      // name: "VONGUYENGIAHAN",
+      // birthDay: "30122000",
+      // homeTown: "TPHoChiMinh",
+      // locale: "PhuNhuan",
       errorID: "",
       errorName: "",
       errorBirthDay: "",
@@ -134,8 +134,8 @@ export default class Form_Screen extends React.Component {
   }
   handleSubmit = () => {
     var resultFromCardID = this.props.imageData
-    var onlyForTest = ["CONGHOAXAHOICHUNGHIAVIETNAM", "DoclapTudoHanhphuc", "GIAYCHUNGMINHNHANDAN", "VIETNAM", "So364152355", "HotenVONGUYENGIAHAN", "Sinhngay", "30122000", "NguyenquanTPHoChiMinh", "NoiDKHKthuongtru430NguyenKiem", "Phuong3quanPhuNhuan"];
-    var resultFromCardID = onlyForTest.map(item => item.replace(/So|Hoten|SO|Sinhngay|/g, ""))
+   // var onlyForTest = ["CONGHOAXAHOICHUNGHIAVIETNAM", "DoclapTudoHanhphuc", "GIAYCHUNGMINHNHANDAN", "VIETNAM", "So364152355", "HotenVONGUYENGIAHAN", "Sinhngay", "30122000", "NguyenquanTPHoChiMinh", "NoiDKHKthuongtru430NguyenKiem", "Phuong3quanPhuNhuan"];
+    var resultFromCardID = resultFromCardID.map(item => item.replace(/So|Hoten|SO|Sinhngay|/g, ""))
     for (var i = 0; i <= resultFromCardID.length; i++) {
 
       if (resultFromCardID[i] == "") {
