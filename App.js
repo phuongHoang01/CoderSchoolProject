@@ -363,7 +363,6 @@ class TemplateResultScreen extends React.Component {
       }, () => {
         this.setState({ isLoading: false })
       })
-      return
     }
   }
 
@@ -664,13 +663,9 @@ class FaceResultScreen extends React.Component {
   faceVerify(result) {
     if (result.isIdentical == true || result.confidence >= 0.4) {
       this.setState({
-        alertError: ''
-      }), () => {
-        this.setState({
-          isLoading: false
-        })
-      }
-      return
+        alertError: '',
+        isLoading: false
+      })
     }
     else {
       this.setState({
