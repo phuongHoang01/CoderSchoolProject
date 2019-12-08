@@ -52,7 +52,7 @@ export default class Result extends React.Component {
                 <LottieView style={{ width: "80%", height: 300, alignSelf: 'center', }}
                     source={this.getImage()}
                     progress={this.state.success}
-                     />
+                />
                 <View style={
                     {
                         alignItems: 'center',
@@ -60,9 +60,9 @@ export default class Result extends React.Component {
                         marginLeft: 20,
                         marginRight: 20,
                     }}>
-                    <View style={{alignItems:'center'}}>
-                    <Text style={styles.waitText}>{this.props.nofication}</Text>
-                    <Text style={styles.decription}>{this.props.decription}</Text>
+                    <View style={{ alignItems: 'center' }}>
+                        <Text style={styles.waitText}>{this.props.nofication}</Text>
+                        <Text style={styles.decription}>{this.props.decription}</Text>
                     </View>
                 </View>
 

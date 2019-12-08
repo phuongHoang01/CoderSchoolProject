@@ -57,7 +57,7 @@ class Result extends React.Component {
             case "Form":
                 return require("../../assets/Animation/normalSucces.json")
             case "faceRecognize":
-                return require("../../assets/Animation/succes.json")
+                return require("../../assets/Animation/faceSucces.json")
             default:
                 break;
         }
